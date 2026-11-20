@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,48 +7,188 @@
 <title>KITCHOL Mart</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#f3f7f3;color:#183326}
-header{background:#087b45;color:white;padding:25px 18px;border-radius:0 0 22px 22px}
-header h1{margin:0;font-size:28px}
-header p{margin-bottom:0}
-main{padding:18px}
-input{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;font-size:16px}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7f4;color:#183326}
+header{background:#087b45;color:white;padding:24px 18px;border-radius:0 0 22px 22px}
+header h1{margin:0;font-size:27px}
+header p{margin:7px 0 0;color:#e0f5e9}
+main{padding:17px}
+.search{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;font-size:16px;margin:15px 0}
 h2{font-size:20px}
+.categories{display:flex;gap:9px;overflow-x:auto;padding:5px 0 12px}
+.categories button{white-space:nowrap;background:white;color:#087b45;border:1px solid #087b45}
+.categories button.active{background:#087b45;color:white}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.item{background:white;padding:15px;border-radius:15px}
-.emoji{font-size:38px}
-.price{color:#087b45;font-weight:bold}
-button{background:#087b45;color:white;border:0;padding:11px 15px;border-radius:9px}
+.product{background:white;padding:13px;border-radius:15px;box-shadow:0 2px 8px #0000000a}
+.photo{height:90px;background:#edf6ef;border-radius:10px;display:grid;place-items:center;font-size:43px}
+.product h3{font-size:16px;margin:11px 0 5px}
+.price{color:#087b45;font-weight:bold;margin:8px 0}
+.small{color:#78847b;font-size:12px}
+button{border:0;border-radius:9px;padding:11px 14px;background:#087b45;color:white;font-size:14px;cursor:pointer}
+.add{width:100%}
+.cartbar{position:sticky;bottom:10px;background:#087b45;color:white;border-radius:13px;padding:15px;margin-top:20px;display:flex;justify-content:space-between;align-items:center}
+.cartbar button{background:white;color:#087b45;font-weight:bold}
+.panel{display:none;background:white;border-radius:15px;padding:16px;margin-top:15px}
+.cartrow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:12px 0;gap:8px}
+.qty{display:flex;align-items:center;gap:10px}
+.qty button{padding:6px 11px}
+input,textarea{width:100%;padding:13px;border:1px solid #d5ded7;border-radius:9px;margin:7px 0 13px;font-size:15px;font-family:inherit}
+textarea{min-height:75px}
+.checkout{width:100%;padding:14px;margin-top:10px;font-weight:bold}
+.total{display:flex;justify-content:space-between;font-weight:bold;font-size:19px;margin:16px 0}
+.success{text-align:center;background:white;padding:25px;border-radius:15px;margin-top:18px;display:none}
+footer{text-align:center;color:#77847a;padding:25px;font-size:12px}
 </style>
 </head>
 <body>
 <header>
-<h1>KITCHOL Mart</h1>
+<h1>KITCHOL Mart 🛒</h1>
 <p>Your Everyday Grocery Store</p>
+<p>Fresh Products | Easy Shopping</p>
 </header>
+
 <main>
-<input id="search" placeholder="Search groceries..." oninput="filterItems()">
+<input class="search" id="search" placeholder="🔍 Search groceries..." oninput="render()">
+
 <h2>Shop Categories</h2>
-<div class="grid" id="products">
-<div class="item"><div class="emoji">🥬</div><h3>Vegetables</h3><p class="price">Starting ₹20</p><button onclick="add()">Add to Cart</button></div>
-<div class="item"><div class="emoji">🍎</div><h3>Fruits</h3><p class="price">Starting ₹30</p><button onclick="add()">Add to Cart</button></div>
-<div class="item"><div class="emoji">🥛</div><h3>Dairy</h3><p class="price">Starting ₹25</p><button onclick="add()">Add to Cart</button></div>
-<div class="item"><div class="emoji">🍚</div><h3>Rice & Grains</h3><p class="price">Starting ₹50</p><button onclick="add()">Add to Cart</button></div>
+<div class="categories" id="categories">
+<button class="active" onclick="choose('All',this)">All</button>
+<button onclick="choose('Vegetables',this)">Vegetables</button>
+<button onclick="choose('Fruits',this)">Fruits</button>
+<button onclick="choose('Dairy',this)">Dairy</button>
+<button onclick="choose('Grocery',this)">Grocery</button>
 </div>
-<h2 id="cart">Cart: 0 Items</h2>
+
+<h2>Popular Products</h2>
+<div class="grid" id="products"></div>
+
+<div class="cartbar">
+<div>🛒 <b id="count">0</b> Items<br><span id="amount">₹0</span></div>
+<button onclick="showCart()">View Cart →</button>
+</div>
+
+<section class="panel" id="cartPanel">
+<h2>My Shopping Cart</h2>
+<div id="cartItems"></div>
+<div class="total"><span>Total Amount</span><span id="cartTotal">₹0</span></div>
+<button class="checkout" onclick="showCheckout()">Proceed to Checkout</button>
+</section>
+
+<section class="panel" id="checkoutPanel">
+<h2>Delivery Details</h2>
+<form id="orderForm">
+<label>Customer Name</label>
+<input id="customer" required placeholder="Enter your name">
+<label>Mobile Number</label>
+<input id="phone" type="tel" inputmode="numeric" pattern="[0-9]{10}" required placeholder="10 digit mobile number">
+<label>Delivery Address</label>
+<textarea id="address" required placeholder="House number, street, area, city, PIN code"></textarea>
+<button class="checkout" type="submit">Place Order</button>
+</form>
+</section>
+
+<section class="success" id="success">
+<div style="font-size:50px">✅</div>
+<h2>Order Placed!</h2>
+<p id="orderDetails"></p>
+<button onclick="newShopping()">Continue Shopping</button>
+</section>
 </main>
+
+<footer>© KITCHOL Mart | Freshness Delivered With Care</footer>
+
 <script>
-let count=0;
-function add(){
-count++;
-document.getElementById('cart').innerText='Cart: '+count+' Items';
+const data=[
+{id:1,name:"Fresh Vegetables",category:"Vegetables",price:20,emoji:"🥬"},
+{id:2,name:"Fresh Tomatoes",category:"Vegetables",price:30,emoji:"🍅"},
+{id:3,name:"Potato",category:"Vegetables",price:25,emoji:"🥔"},
+{id:4,name:"Fresh Fruits",category:"Fruits",price:30,emoji:"🍎"},
+{id:5,name:"Banana",category:"Fruits",price:40,emoji:"🍌"},
+{id:6,name:"Fresh Milk",category:"Dairy",price:30,emoji:"🥛"},
+{id:7,name:"Rice",category:"Grocery",price:50,emoji:"🍚"},
+{id:8,name:"Cooking Oil",category:"Grocery",price:120,emoji:"🫙"}
+];
+let cart={};
+let category="All";
+const money=n=>"₹"+n;
+
+function choose(c,b){
+category=c;
+document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
+b.classList.add("active");
+render();
 }
-function filterItems(){
-let q=document.getElementById('search').value.toLowerCase();
-document.querySelectorAll('.item').forEach(x=>{
-x.style.display=x.innerText.toLowerCase().includes(q)?'block':'none';
+function render(){
+let q=document.getElementById("search").value.toLowerCase();
+let items=data.filter(p=>(category==="All"||p.category===category)&&p.name.toLowerCase().includes(q));
+document.getElementById("products").innerHTML=items.map(p=>`
+<div class="product">
+<div class="photo">${p.emoji}</div>
+<h3>${p.name}</h3>
+<div class="small">${p.category}</div>
+<div class="price">${money(p.price)}</div>
+<button class="add" onclick="add(${p.id})">Add to Cart +</button>
+</div>`).join("");
+updateCart();
+}
+function add(id){cart[id]=(cart[id]||0)+1;updateCart();}
+function change(id,n){
+cart[id]=(cart[id]||0)+n;
+if(cart[id]<=0)delete cart[id];
+updateCart();
+}
+function total(){
+return Object.entries(cart).reduce((s,[id,n])=>s+data.find(p=>p.id==id).price*n,0);
+}
+function updateCart(){
+let count=Object.values(cart).reduce((a,b)=>a+b,0);
+document.getElementById("count").textContent=count;
+document.getElementById("amount").textContent=money(total());
+document.getElementById("cartTotal").textContent=money(total());
+document.getElementById("cartItems").innerHTML=Object.entries(cart).map(([id,n])=>{
+let p=data.find(x=>x.id==id);
+return `<div class="cartrow">
+<div>${p.emoji} ${p.name}<br><b>${money(p.price*n)}</b></div>
+<div class="qty">
+<button onclick="change(${id},-1)">−</button>${n}
+<button onclick="change(${id},1)">+</button>
+</div></div>`;
+}).join("")||"Your cart is empty.";
+}
+function showCart(){
+document.getElementById("cartPanel").style.display="block";
+document.getElementById("checkoutPanel").style.display="none";
+document.getElementById("success").style.display="none";
+updateCart();
+document.getElementById("cartPanel").scrollIntoView({behavior:"smooth"});
+}
+function showCheckout(){
+if(total()===0){alert("Please add products to your cart.");return;}
+document.getElementById("checkoutPanel").style.display="block";
+document.getElementById("checkoutPanel").scrollIntoView({behavior:"smooth"});
+}
+document.getElementById("orderForm").addEventListener("submit",function(e){
+e.preventDefault();
+if(total()===0)return;
+let orderId="KM"+Date.now().toString().slice(-8);
+let details="Order ID: "+orderId+
+"\nCustomer: "+document.getElementById("customer").value+
+"\nMobile: "+document.getElementById("phone").value+
+"\nAddress: "+document.getElementById("address").value+
+"\nTotal: "+money(total());
+document.getElementById("orderDetails").innerText=details;
+document.getElementById("cartPanel").style.display="none";
+document.getElementById("checkoutPanel").style.display="none";
+document.getElementById("success").style.display="block";
+cart={};
+updateCart();
+document.getElementById("success").scrollIntoView({behavior:"smooth"});
 });
+function newShopping(){
+document.getElementById("success").style.display="none";
+document.getElementById("orderForm").reset();
+window.scrollTo({top:0,behavior:"smooth"});
 }
+render();
 </script>
 </body>
 </html>
