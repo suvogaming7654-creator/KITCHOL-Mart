@@ -5,7 +5,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KITCHOL Mart</title>
-<style>
+<style>.brand-logo{
+  width:180px;
+  height:auto;
+  display:block;
+  margin:0 auto;
+}
+header{
+  background:white;
+  color:#087b45;
+  text-align:center;
+  padding:15px;
+}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7f4;color:#183326}
 header{background:#087b45;color:white;padding:24px 18px;border-radius:0 0 22px 22px}
@@ -40,11 +51,9 @@ footer{text-align:center;color:#77847a;padding:25px;font-size:12px}
 </style>
 </head>
 <body>
-<header>
-<h1>KITCHOL Mart 🛒</h1>
-<p>Your Everyday Grocery Store</p>
-<p>Fresh Products | Easy Shopping</p>
-</header>
+  <header>
+<img src="logo.png" class="brand-logo" alt="KITCHOL Mart Logo">
+  </header>
 
 <main>
 <input class="search" id="search" placeholder="🔍 Search groceries..." oninput="render()">
