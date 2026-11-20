@@ -3,311 +3,113 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KITCHOL Mart</title>
-
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f5f7f5;
- color:#183326;
-}
-header{
- background:white;
- padding:18px;
- text-align:center;
- box-shadow:0 2px 8px #ddd;
-}
-.brand-logo{
- width:180px;
- max-width:70%;
- height:auto;
- display:block;
- margin:auto;
-}
-main{padding:16px;max-width:700px;margin:auto}
-h2{font-size:20px}
-.search{
- width:100%;
- padding:14px;
- border:1px solid #ddd;
- border-radius:12px;
- font-size:16px;
- margin:12px 0;
-}
-.categories{
- display:flex;
- gap:9px;
- overflow-x:auto;
- padding:8px 0;
-}
-.categories button{
- border:1px solid #087b45;
- background:white;
- color:#087b45;
- padding:11px 15px;
- border-radius:20px;
- white-space:nowrap;
-}
-.categories button.active{
- background:#087b45;
- color:white;
-}
-.grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px;
-}
-.product{
- background:white;
- padding:14px;
- border-radius:14px;
- box-shadow:0 2px 8px #ddd;
-}
-.product .photo{
- height:85px;
- background:#eaf5ed;
- border-radius:10px;
- display:grid;
- place-items:center;
- font-size:42px;
-}
-.product h3{font-size:16px;margin:10px 0 5px}
-.price{color:#087b45;font-weight:bold}
-button{
- cursor:pointer;
-}
-.add{
- width:100%;
- background:#087b45;
- color:white;
- border:0;
- padding:11px;
- border-radius:9px;
- margin-top:10px;
-}
-.panel{
- background:white;
- padding:16px;
- border-radius:14px;
- margin-top:18px;
-}
-.cart-row{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:8px;
- border-bottom:1px solid #eee;
- padding:12px 0;
-}
-.qty button{
- background:#e8f5eb;
- border:0;
- padding:7px 12px;
- border-radius:6px;
- color:#087b45;
-}
-.field{
- width:100%;
- padding:13px;
- margin:7px 0 13px;
- border:1px solid #ddd;
- border-radius:9px;
- font-size:15px;
-}
-.checkout{
- width:100%;
- background:#087b45;
- color:white;
- border:0;
- padding:15px;
- border-radius:10px;
- font-size:16px;
- font-weight:bold;
-}
-#message{
- display:none;
- background:#e5f7e9;
- padding:15px;
- border-radius:10px;
- margin-top:15px;
- color:#087b45;
-}
-footer{
- text-align:center;
- padding:25px;
- color:#777;
-}
+body{margin:0;font-family:Arial;background:#f5f7f5;color:#222}
+header{background:#168447;color:white;padding:22px;text-align:center}
+header h1{margin:0}
+main{max-width:440px;margin:25px auto;padding:18px}
+.card{background:white;padding:20px;border-radius:14px;box-shadow:0 2px 12px #ddd}
+input,select,button{width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:8px;font-size:16px}
+button{background:#168447;color:white;border:0;font-weight:bold}
+.note{text-align:center;color:#666;font-size:13px}
+#message{color:#168447;text-align:center}
 </style>
 </head>
-
 <body>
-
 <header>
-<img src="logo.png" class="brand-logo" alt="KITCHOL Mart Logo">
+<h1>KITCHOL Mart</h1>
+<p>Your Local Grocery Marketplace</p>
 </header>
-
 <main>
+<div class="card">
+<h2>Welcome</h2>
+<p>Create account or Login</p>
 
-<input class="search" id="search"
-placeholder="🔍 Search groceries..."
-oninput="renderProducts()">
+<select id="role">
+<option value="customer">Customer</option>
+<option value="vendor">Vendor</option>
+</select>
 
-<h2>Shop by Category</h2>
+<input id="email" type="email" placeholder="Email address">
+<input id="password" type="password" placeholder="Password">
 
-<div class="categories">
-<button class="active" onclick="choose('All',this)">All</button>
-<button onclick="choose('Vegetables',this)">🥦 Vegetables</button>
-<button onclick="choose('Fruits',this)">🍎 Fruits</button>
-<button onclick="choose('Dairy',this)">🥛 Dairy</button>
-<button onclick="choose('Grocery',this)">🍚 Grocery</button>
+<button id="register">Create Account</button>
+<button id="login">Login</button>
+<button id="logout">Logout</button>
+
+<p id="message">Ready to start</p>
+<p class="note">KITCHOL Mart Multi-Vendor Marketplace</p>
 </div>
-
-<h2>Popular Products</h2>
-<div class="grid" id="products"></div>
-
-<section class="panel" id="cart">
-<h2>🛒 My Shopping Cart</h2>
-<div id="cartItems">Your cart is empty.</div>
-<h3>Total: ₹<span id="total">0</span></h3>
-</section>
-
-<section class="panel">
-<h2>📦 Delivery Details</h2>
-
-<form id="orderForm">
-<label>Customer Name</label>
-<input class="field" id="customer" required
-placeholder="Enter your name">
-
-<label>Mobile Number</label>
-<input class="field" id="mobile"
-type="tel" pattern="[0-9]{10}" required
-placeholder="10 digit mobile number">
-
-<label>Delivery Address</label>
-<textarea class="field" id="address"
-required placeholder="Enter full delivery address"></textarea>
-
-<button class="checkout" type="submit">
-Place Order
-</button>
-</form>
-
-<div id="message"></div>
-</section>
-
 </main>
 
-<footer>
-© 2026 KITCHOL Mart
-<p>Your Everyday Grocery Store</p>
-</footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword,
+signInWithEmailAndPassword, signOut } from
+"https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import { getFirestore, doc, setDoc } from
+"https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-<script>
-const productsData=[
- {id:1,name:"Fresh Tomato",category:"Vegetables",price:30,emoji:"🍅"},
- {id:2,name:"Fresh Potato",category:"Vegetables",price:25,emoji:"🥔"},
- {id:3,name:"Fresh Onion",category:"Vegetables",price:35,emoji:"🧅"},
- {id:4,name:"Fresh Carrot",category:"Vegetables",price:40,emoji:"🥕"},
- {id:5,name:"Fresh Apple",category:"Fruits",price:120,emoji:"🍎"},
- {id:6,name:"Fresh Banana",category:"Fruits",price:40,emoji:"🍌"},
- {id:7,name:"Fresh Orange",category:"Fruits",price:60,emoji:"🍊"},
- {id:8,name:"Milk",category:"Dairy",price:30,emoji:"🥛"},
- {id:9,name:"Butter",category:"Dairy",price:55,emoji:"🧈"},
- {id:10,name:"Rice",category:"Grocery",price:60,emoji:"🍚"},
- {id:11,name:"Cooking Oil",category:"Grocery",price:140,emoji:"🫗"},
- {id:12,name:"Sugar",category:"Grocery",price:45,emoji:"🧂"}
-];
+const firebaseConfig = {
+apiKey: "AIzaSyDmAmX0wfWk-SrBz5ikKnULpMGd3zNrIZo",
+authDomain: "kitchol-mart-1b270.firebaseapp.com",
+projectId: "kitchol-mart-1b270",
+storageBucket: "kitchol-mart-1b270.firebasestorage.app",
+messagingSenderId: "631334576857",
+appId: "1:631334576857:web:d3b3312bcdc12e472194c8",
+measurementId: "G-X1WF357YJG"
+};
 
-let selectedCategory="All";
-let cart={};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const msg = document.getElementById("message");
 
-function choose(category,button){
- selectedCategory=category;
- document.querySelectorAll(".categories button")
- .forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- renderProducts();
-}
+document.getElementById("register").onclick = async () => {
+try {
+const email = document.getElementById("email").value.trim();
+const password = document.getElementById("password").value;
+const role = document.getElementById("role").value;
 
-function renderProducts(){
- const search=document.getElementById("search").value.toLowerCase();
- const list=productsData.filter(p=>
- (selectedCategory==="All"||p.category===selectedCategory)&&
- p.name.toLowerCase().includes(search)
- );
- document.getElementById("products").innerHTML=
- list.map(p=>`
- <div class="product">
- <div class="photo">${p.emoji}</div>
- <h3>${p.name}</h3>
- <div class="price">₹${p.price}</div>
- <button class="add" onclick="add(${p.id})">Add to Cart</button>
- </div>`).join("");
-}
+const result = await createUserWithEmailAndPassword(auth,email,password);
 
-function add(id){
- cart[id]=(cart[id]||0)+1;
- renderCart();
-}
-
-function changeQty(id,amount){
- cart[id]=(cart[id]||0)+amount;
- if(cart[id]<=0) delete cart[id];
- renderCart();
-}
-
-function renderCart(){
- let total=0;
- let html="";
- Object.keys(cart).forEach(id=>{
- const p=productsData.find(x=>x.id==id);
- const qty=cart[id];
- total+=p.price*qty;
- html+=`
- <div class="cart-row">
- <div>${p.emoji} ${p.name}<br>₹${p.price} × ${qty}</div>
- <div class="qty">
- <button onclick="changeQty(${id},-1)">−</button>
- ${qty}
- <button onclick="changeQty(${id},1)">+</button>
- </div>
- </div>`;
- });
- document.getElementById("cartItems").innerHTML=
- html||"Your cart is empty.";
- document.getElementById("total").textContent=total;
-}
-
-document.getElementById("orderForm").addEventListener("submit",function(e){
- e.preventDefault();
-
- if(Object.keys(cart).length===0){
- alert("Please add products to your cart first.");
- return;
- }
-
- const name=document.getElementById("customer").value;
- const total=document.getElementById("total").textContent;
-
- document.getElementById("message").style.display="block";
- document.getElementById("message").innerHTML=
- "<h3>✅ Order Request Created!</h3>"+
- "<p>Thank you, "+name+"!</p>"+
- "<p>Your order total is ₹"+total+"</p>"+
- "<p>This is a demo order. It has not been sent to a shop or admin.</p>";
-
- cart={};
- renderCart();
- this.reset();
+await setDoc(doc(db,"users",result.user.uid),{
+email: email,
+role: role,
+status: role === "vendor" ? "pending" : "active",
+createdAt: new Date()
 });
 
-renderProducts();
-renderCart();
-</script>
+msg.textContent = role === "vendor"
+? "Vendor account created. Waiting for approval."
+: "Customer account created successfully!";
+} catch(e) {
+msg.textContent = e.message;
+}
+};
 
+document.getElementById("login").onclick = async () => {
+try {
+const email = document.getElementById("email").value.trim();
+const password = document.getElementById("password").value;
+await signInWithEmailAndPassword(auth,email,password);
+msg.textContent = "Login successful!";
+} catch(e) {
+msg.textContent = e.message;
+}
+};
+
+document.getElementById("logout").onclick = async () => {
+try {
+await signOut(auth);
+msg.textContent = "Logged out successfully.";
+} catch(e) {
+msg.textContent = e.message;
+}
+};
+</script>
 </body>
 </html>
