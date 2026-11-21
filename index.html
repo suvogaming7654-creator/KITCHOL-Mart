@@ -78,6 +78,7 @@ small{color:#666;overflow-wrap:anywhere}
 <h3>➕ Add New Product</h3>
 
 <input id="productName" placeholder="Product Name">
+ <input id="productSKU" placeholder="SKU / Product ID">
 <input id="productPrice" type="number" placeholder="Price (₹)">
 <input id="productStock" type="number" step="0.001" placeholder="Stock Quantity">
 
@@ -186,6 +187,7 @@ try{
 const files=Array.from($("productImage").files);
 
 const name=$("productName").value.trim();
+ const sku=$("productSKU").value.trim();
 const price=Number($("productPrice").value);
 const stock=Number($("productStock").value);
   const stockUnit=$("productStockUnit").value;
@@ -217,6 +219,7 @@ files.map(file=>uploadProductPhoto(file))
 
 await addDoc(collection(db,"products"),{
 name:name,
+ sku:sku,
 price:price,
 stock:stock,
   stockUnit:stockUnit,
@@ -231,6 +234,7 @@ createdAt:serverTimestamp()
 $("productMessage").textContent="Product saved successfully!";
 
 $("productName").value="";
+ $("productSKU").value="";
 $("productPrice").value="";
 $("productStock").value="";
 $("productCategory").value="";
