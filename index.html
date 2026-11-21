@@ -191,12 +191,27 @@ return result.secure_url;
 }
 const $=id=>document.getElementById(id);
   $("productImage").onchange=()=>{
-const file=$("productImage").files[0];
-if(file){
+const files=Array.from($("productImage").files);
 const preview=$("imagePreview");
-preview.src=URL.createObjectURL(file);
-preview.style.display="block";
+
+preview.innerHTML="";
+
+if(files.length>4){
+$("productMessage").textContent="Maximum 4 photos allowed.";
+$("productImage").value="";
+return;
 }
+
+files.forEach(file=>{
+const img=document.createElement("img");
+img.src=URL.createObjectURL(file);
+img.style.width="90px";
+img.style.margin="5px";
+preview.appendChild(img);
+});
+
+$("productMessage").textContent=
+files.length+" photo(s) selected";
 };
 const message=$("message");
 
