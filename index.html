@@ -449,6 +449,79 @@ $("adminMessage").textContent="Error: "+e.message;
 }
 }
 
+ async function loadAdminProducts(){
+try{
+const list=$("adminProductList");
+list.innerHTML="Loading Products...";
+
+const q=query(
+collection(db,"products"),
+where("status","==","pending")
+);
+
+const snapshot=await getDocs(q);
+list.innerHTML="";
+
+if(snapshot.empty){
+list.textContent="No Pending Products";
+return;
+}
+
+snapshot.forEach(item=>{
+const p=item.data();
+
+const card=document.createElement("div");
+card.className="card";
+
+const name=document.createElement("h3");
+name.textContent=p.name || "No Name";
+card.appendChild(name);
+
+const details=document.createElement("p");
+details.textContent=
+"SKU: "+(p.sku || "N/A")+
+" | Price: ₹"+p.price+
+" | Stock: "+p.stock+" "+(p.stockUnit || "");
+card.appendChild(details);
+
+const category=document.createElement("p");
+category.textContent="Category: "+(p.category || "");
+card.appendChild(category);
+
+if(p.imageUrls && p.imageUrls.length){
+const img=document.createElement("img");
+img.src=p.imageUrls[0];
+img.style.width="120px";
+card.appendChild(img);
+}
+
+const approve=document.createElement("button");
+approve.textContent="Approve Product";
+approve.onclick=async()=>{
+await updateDoc(doc(db,"products",item.id),{
+status:"approved"
+});
+await loadAdminProducts();
+};
+
+const reject=document.createElement("button");
+reject.textContent="Reject Product";
+reject.onclick=async()=>{
+await updateDoc(doc(db,"products",item.id),{
+status:"rejected"
+});
+await loadAdminProducts();
+};
+
+card.append(approve,reject);
+list.appendChild(card);
+});
+
+}catch(e){
+$("adminProductList").textContent="Error: "+e.message;
+}
+ }
+ 
 async function changeStatus(uid,status){
 try{
 await updateDoc(doc(db,"users",uid),{status});
