@@ -67,7 +67,37 @@ small{color:#666;overflow-wrap:anywhere}
 <p>Welcome to KITCHOL Mart!</p>
 <p>🥦 Vegetables | 🍎 Fruits</p>
 <p>🥛 Dairy | 🍚 Grocery</p>
-<p>Shop features will be added next.</p>
+<h3>📍 My Delivery Addresses</h3>
+
+<div id="addressList">
+No saved addresses yet.
+</div>
+
+<button id="addAddress" type="button">
++ Add New Address
+</button>
+
+<div id="addressForm" class="hidden">
+<h3>Add Delivery Address</h3>
+<input id="addressName" placeholder="Customer Name">
+<input id="addressPhone" type="tel" placeholder="Mobile Number">
+<input id="addressHouse" placeholder="House / Flat Number">
+<input id="addressStreet" placeholder="Street / Area">
+<input id="addressCity" placeholder="Village / Town">
+<input id="addressPost" placeholder="Post Office">
+<input id="addressPin" placeholder="PIN Code">
+<input id="addressDistrict" placeholder="District">
+<input id="addressState" placeholder="State">
+
+<select id="addressType">
+<option value="Home">Home</option>
+<option value="Office">Office</option>
+</select>
+
+<button id="saveAddress" type="button">Save Address</button>
+<button id="cancelAddress" type="button">Cancel</button>
+<p id="addressMessage"></p>
+</div>
 <button id="customerLogout">Logout</button>
 </section>
 
