@@ -146,25 +146,65 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 async function uploadProductPhoto(file){
   
+
 $("addProduct").onclick=async()=>{
 try{
 const files=Array.from($("productImage").files);
 
-if(files.length===0){
-$("productMessage").textContent="Choose at least 1 photo";
+const name=$("productName").value.trim();
+const price=Number($("productPrice").value);
+const stock=Number($("productStock").value);
+const category=$("productCategory").value.trim();
+
+if(!name || !category || price<=0 || !Number.isInteger(stock) || stock<0){
+$("productMessage").textContent="Enter valid product details";
 return;
 }
 
-if(files.length>4){
-$("productMessage").textContent="Maximum 4 photos allowed";
+if(files.length===0 || files.length>4){
+$("productMessage").textContent="Choose 1 to 4 photos";
 return;
 }
 
+if(!auth.currentUser){
+$("productMessage").textContent="Please login again";
+return;
+}
+
+$("addProduct").disabled=true;
 $("productMessage").textContent="Uploading photos...";
 
 const imageUrls=await Promise.all(
 files.map(file=>uploadProductPhoto(file))
 );
+
+await addDoc(collection(db,"products"),{
+name:name,
+price:price,
+stock:stock,
+category:category,
+imageUrls:imageUrls,
+vendorId:auth.currentUser.uid,
+createdAt:serverTimestamp()
+});
+
+$("productMessage").textContent="Product saved successfully!";
+
+$("productName").value="";
+$("productPrice").value="";
+$("productStock").value="";
+$("productCategory").value="";
+$("productImage").value="";
+$("imagePreview").innerHTML="";
+
+}catch(e){
+$("productMessage").textContent="Error: "+e.message;
+console.error(e);
+}finally{
+$("addProduct").disabled=false;
+}
+};
+  
 
 await addDoc(collection(db,"products"),{
 name:$("productName").value.trim(),
