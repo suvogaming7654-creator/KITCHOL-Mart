@@ -81,7 +81,8 @@ small{color:#666;overflow-wrap:anywhere}
  <input id="productSKU" placeholder="SKU / Product ID">
 <input id="productPrice" type="number" placeholder="Price (₹)">
 <input id="productStock" type="number" step="0.001" placeholder="Stock Quantity">
-
+<input id="productCategory" placeholder="Category">
+ 
 <select id="productStockUnit">
 <option value="kg">Kilogram (KG)</option>
 <option value="g">Gram (G)</option>
@@ -189,6 +190,7 @@ console.log("Highlights:", $("productHighlights"));
  
 $("addProduct").onclick=async()=>{
 try{
+ 
 const files=Array.from($("productImage").files);
 
 const name=$("productName").value.trim();
