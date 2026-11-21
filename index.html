@@ -145,6 +145,14 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 
 const $=id=>document.getElementById(id);
+  $("productImage").onchange=()=>{
+const file=$("productImage").files[0];
+if(file){
+const preview=$("imagePreview");
+preview.src=URL.createObjectURL(file);
+preview.style.display="block";
+}
+};
 const message=$("message");
 
 function showPage(id){
