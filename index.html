@@ -9,13 +9,14 @@
 *{box-sizing:border-box}
 body{margin:0;background:#f3f7f3;font-family:Arial;color:#222}
 header{background:#168447;color:white;text-align:center;padding:20px}
-main{max-width:480px;margin:auto;padding:15px}
+main{max-width:520px;margin:auto;padding:15px}
 .card{background:white;padding:18px;border-radius:14px;margin:12px 0}
 input,button{width:100%;padding:13px;margin:7px 0;border:1px solid #ddd;border-radius:8px;font-size:16px}
 button{background:#168447;color:white;border:0;font-weight:bold}
-.secondary{background:#555}
+.reject{background:#b83232}
 .hidden{display:none}
-#message{color:#168447;overflow-wrap:anywhere}
+.vendor{border:1px solid #ddd;border-radius:10px;padding:12px;margin:10px 0}
+small{color:#666;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -26,9 +27,9 @@ button{background:#168447;color:white;border:0;font-weight:bold}
 <main>
 
 <section id="authPage" class="card">
-<h2>Welcome to KITCHOL Mart</h2>
-<button onclick="showForm('customer')">Customer Registration</button>
-<button onclick="showForm('vendor')">Vendor / Shop Registration</button>
+<h2>Welcome</h2>
+<button id="showCustomer">Customer Registration</button>
+<button id="showVendor">Vendor Registration</button>
 
 <div id="customerForm" class="hidden">
 <h3>Customer Registration</h3>
@@ -41,7 +42,7 @@ button{background:#168447;color:white;border:0;font-weight:bold}
 <h3>Vendor Registration</h3>
 <input id="vShop" placeholder="Shop Name">
 <input id="vOwner" placeholder="Owner Name">
-<input id="vPhone" type="tel" placeholder="Mobile Number">
+<input id="vPhone" placeholder="Mobile Number">
 <input id="vAddress" placeholder="Shop Address">
 <input id="vEmail" type="email" placeholder="Email">
 <input id="vPass" type="password" placeholder="Password (6+ characters)">
@@ -56,24 +57,28 @@ button{background:#168447;color:white;border:0;font-weight:bold}
 <p id="message"></p>
 </section>
 
-<section id="customerPage" class="hidden">
-<div class="card">
-<h2>Welcome, Customer!</h2>
-<p>Shop groceries from local stores.</p>
-<h3>Categories</h3>
-<p>🥦 Vegetables &nbsp; 🍎 Fruits</p>
-<p>🥛 Dairy &nbsp; 🍚 Grocery</p>
-<h3>More features coming soon</h3>
+<section id="customerPage" class="card hidden">
+<h2>Customer Dashboard</h2>
+<p>Welcome to KITCHOL Mart!</p>
+<p>🥦 Vegetables | 🍎 Fruits</p>
+<p>🥛 Dairy | 🍚 Grocery</p>
+<p>Shop features will be added next.</p>
 <button id="customerLogout">Logout</button>
-</div>
 </section>
 
-<section id="vendorPage" class="hidden">
-<div class="card">
+<section id="vendorPage" class="card hidden">
 <h2>Vendor Dashboard</h2>
-<p id="vendorStatus">Your shop registration is pending approval.</p>
+<p id="vendorStatus"></p>
 <button id="vendorLogout">Logout</button>
-</div>
+</section>
+
+<section id="adminPage" class="card hidden">
+<h2>👑 Owner Admin Panel</h2>
+<p>Vendor Applications</p>
+<button id="refreshVendors">Refresh Applications</button>
+<p id="adminMessage"></p>
+<div id="vendorList"></div>
+<button id="adminLogout">Logout</button>
 </section>
 
 </main>
@@ -81,12 +86,16 @@ button{background:#168447;color:white;border:0;font-weight:bold}
 <script type="module">
 import {initializeApp} from
 "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+
 import {
 getAuth,createUserWithEmailAndPassword,
 signInWithEmailAndPassword,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc} from
-"https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+import {
+getFirestore,doc,getDoc,setDoc,
+collection,getDocs,updateDoc
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyDmAmX0wfWk-SrBz5ikKnULpMGd3zNrIZo",
@@ -97,106 +106,187 @@ messagingSenderId:"631334576857",
 appId:"1:631334576857:web:d3b3312bcdc12e472194c8"
 };
 
+const ADMIN_UID="lZOc0r6qxgb5DoONqXgnNvcLfDF3";
+
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
-const message=document.getElementById("message");
 
-window.showForm=(type)=>{
-document.getElementById("customerForm").classList.toggle("hidden",type!=="customer");
-document.getElementById("vendorForm").classList.toggle("hidden",type!=="vendor");
+const $=id=>document.getElementById(id);
+const message=$("message");
+
+function showPage(id){
+["authPage","customerPage","vendorPage","adminPage"].forEach(x=>{
+$(x).classList.add("hidden");
+});
+$(id).classList.remove("hidden");
+}
+
+$("showCustomer").onclick=()=>{
+$("customerForm").classList.remove("hidden");
+$("vendorForm").classList.add("hidden");
 };
 
-function showPage(page){
-["authPage","customerPage","vendorPage"].forEach(id=>{
-document.getElementById(id).classList.add("hidden");
-});
-document.getElementById(page).classList.remove("hidden");
-}
+$("showVendor").onclick=()=>{
+$("vendorForm").classList.remove("hidden");
+$("customerForm").classList.add("hidden");
+};
 
-async function registerAccount(email,password,profile){
+async function createProfile(email,password,data){
 const result=await createUserWithEmailAndPassword(auth,email,password);
 await setDoc(doc(db,"users",result.user.uid),{
-...profile,email:email,
-createdAt:new Date()
+...data,email,createdAt:new Date()
 });
-return result.user;
 }
 
-document.getElementById("customerRegister").onclick=async()=>{
+$("customerRegister").onclick=async()=>{
 try{
-message.textContent="Creating customer account...";
-const email=document.getElementById("cEmail").value.trim();
-const password=document.getElementById("cPass").value;
-await registerAccount(email,password,{
+message.textContent="Creating account...";
+await createProfile($("cEmail").value.trim(),$("cPass").value,{
 role:"customer",status:"active"
 });
 message.textContent="Customer account created!";
 }catch(e){message.textContent=e.message;}
 };
 
-document.getElementById("vendorRegister").onclick=async()=>{
+$("vendorRegister").onclick=async()=>{
 try{
-message.textContent="Registering your shop...";
-const shop=document.getElementById("vShop").value.trim();
-const owner=document.getElementById("vOwner").value.trim();
-const phone=document.getElementById("vPhone").value.trim();
-const address=document.getElementById("vAddress").value.trim();
-const email=document.getElementById("vEmail").value.trim();
-const password=document.getElementById("vPass").value;
+const shop=$("vShop").value.trim();
+const owner=$("vOwner").value.trim();
+const phone=$("vPhone").value.trim();
+const address=$("vAddress").value.trim();
+const email=$("vEmail").value.trim();
+const password=$("vPass").value;
 
 if(!shop||!owner||!phone||!address||!email||!password){
 throw new Error("Please fill in all fields.");
 }
-await registerAccount(email,password,{
-role:"vendor",
-status:"pending",
-shopName:shop,
-ownerName:owner,
-phone:phone,
-address:address
+
+message.textContent="Registering shop...";
+await createProfile(email,password,{
+role:"vendor",status:"pending",
+shopName:shop,ownerName:owner,
+phone,address
 });
-message.textContent="Shop registered! Waiting for Admin approval.";
+message.textContent="Shop registered. Waiting for approval!";
 }catch(e){message.textContent=e.message;}
 };
 
+async function loadAdminVendors(){
+$("adminMessage").textContent="Loading vendors...";
+$("vendorList").replaceChildren();
+
+try{
+const result=await getDocs(collection(db,"users"));
+let count=0;
+
+result.forEach(item=>{
+const v=item.data();
+if(v.role!=="vendor")return;
+count++;
+
+const card=document.createElement("div");
+card.className="vendor";
+
+const name=document.createElement("h3");
+name.textContent=v.shopName||"Unnamed Shop";
+
+const details=document.createElement("p");
+details.textContent=
+"Owner: "+(v.ownerName||"")+
+" | Phone: "+(v.phone||"")+
+" | Address: "+(v.address||"");
+
+const status=document.createElement("p");
+status.textContent="Status: "+(v.status||"unknown");
+
+card.append(name,details,status);
+
+if(v.status!=="active"){
+const approve=document.createElement("button");
+approve.textContent="Approve Shop";
+approve.onclick=()=>changeStatus(item.id,"active");
+
+const reject=document.createElement("button");
+reject.textContent="Reject Shop";
+reject.className="reject";
+reject.onclick=()=>changeStatus(item.id,"rejected");
+
+card.append(approve,reject);
+}
+
+$("vendorList").append(card);
+});
+
+$("adminMessage").textContent=count+" vendor(s) found.";
+}catch(e){
+$("adminMessage").textContent="Error: "+e.message;
+}
+}
+
+async function changeStatus(uid,status){
+try{
+await updateDoc(doc(db,"users",uid),{status});
+await loadAdminVendors();
+}catch(e){
+$("adminMessage").textContent="Update failed: "+e.message;
+}
+}
+
+$("refreshVendors").onclick=loadAdminVendors;
+
 async function openUserPage(user){
-const snap=await getDoc(doc(db,"users",user.uid));
-if(!snap.exists()){
-await signOut(auth);
-message.textContent="Profile not found. Please contact support.";
+if(user.uid===ADMIN_UID){
+showPage("adminPage");
+await loadAdminVendors();
 return;
 }
+
+const snap=await getDoc(doc(db,"users",user.uid));
+
+if(!snap.exists()){
+await signOut(auth);
+message.textContent="Profile not found.";
+return;
+}
+
 const data=snap.data();
+
 if(data.role==="customer"){
 showPage("customerPage");
 }else if(data.role==="vendor"){
 showPage("vendorPage");
-document.getElementById("vendorStatus").textContent=
-data.status==="active"?"Your shop is approved!":"Your shop is waiting for Admin approval.";
+$("vendorStatus").textContent=
+data.status==="active"?"Your shop is approved!":
+data.status==="rejected"?"Your shop application was rejected.":
+"Your shop is waiting for Admin approval.";
 }else{
 await signOut(auth);
 message.textContent="Account role not recognized.";
 }
 }
 
-document.getElementById("login").onclick=async()=>{
+$("login").onclick=async()=>{
 try{
 message.textContent="Logging in...";
-const email=document.getElementById("lEmail").value.trim();
-const password=document.getElementById("lPass").value;
-const result=await signInWithEmailAndPassword(auth,email,password);
+const result=await signInWithEmailAndPassword(
+auth,$("lEmail").value.trim(),$("lPass").value
+);
 await openUserPage(result.user);
 }catch(e){message.textContent=e.message;}
 };
 
-document.getElementById("customerLogout").onclick=()=>signOut(auth);
-document.getElementById("vendorLogout").onclick=()=>signOut(auth);
+$("customerLogout").onclick=()=>signOut(auth);
+$("vendorLogout").onclick=()=>signOut(auth);
+$("adminLogout").onclick=()=>signOut(auth);
 
 onAuthStateChanged(auth,async user=>{
 if(user){
 try{await openUserPage(user);}
-catch(e){message.textContent=e.message;}
+catch(e){
+showPage("authPage");
+message.textContent=e.message;
+}
 }else{
 showPage("authPage");
 }
