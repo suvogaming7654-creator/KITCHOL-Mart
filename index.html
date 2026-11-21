@@ -145,31 +145,44 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 async function uploadProductPhoto(file){
-  $("addProduct").onclick=async()=>{
+  
+$("addProduct").onclick=async()=>{
 try{
-const file=$("productImage").files[0];
-if(!file){
-$("productMessage").textContent="Choose a photo first";
+const files=Array.from($("productImage").files);
+
+if(files.length===0){
+$("productMessage").textContent="Choose at least 1 photo";
 return;
 }
-$("productMessage").textContent="Uploading...";
-const imageUrl=await uploadProductPhoto(file);
+
+if(files.length>4){
+$("productMessage").textContent="Maximum 4 photos allowed";
+return;
+}
+
+$("productMessage").textContent="Uploading photos...";
+
+const imageUrls=await Promise.all(
+files.map(file=>uploadProductPhoto(file))
+);
 
 await addDoc(collection(db,"products"),{
 name:$("productName").value.trim(),
 price:Number($("productPrice").value),
 stock:Number($("productStock").value),
 category:$("productCategory").value.trim(),
-imageUrl:imageUrl,
+imageUrls:imageUrls,
 vendorId:auth.currentUser.uid,
 createdAt:serverTimestamp()
 });
 
-$("productMessage").textContent="Product saved!";
+$("productMessage").textContent="Product saved successfully!";
+
 }catch(e){
 $("productMessage").textContent=e.message;
 }
 };
+  
 const url="https://api.cloudinary.com/v1_1/zu6bsipy/image/upload";
 
 const formData=new FormData();
