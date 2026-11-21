@@ -270,7 +270,24 @@ await signOut(auth);
 message.textContent="Account role not recognized.";
 }
 }
+$("adminLogin").onclick=async()=>{
+try{
+message.textContent="Admin logging in...";
+const result=await signInWithEmailAndPassword(
+auth,$("lEmail").value.trim(),
+$("lPass").value
+);
 
+if(result.user.uid===ADMIN_UID){
+await openUserPage(result.user);
+}else{
+await signOut(auth);
+message.textContent="This is not an Admin account.";
+}
+}catch(e){
+message.textContent=e.message;
+}
+};
 $("login").onclick=async()=>{
 try{
 message.textContent="Logging in...";
