@@ -183,9 +183,10 @@ const files=Array.from($("productImage").files);
 const name=$("productName").value.trim();
 const price=Number($("productPrice").value);
 const stock=Number($("productStock").value);
+  const stockUnit=$("productStockUnit").value;
 const category=$("productCategory").value.trim();
 
-if(!name || !category || price<=0 || !Number.isInteger(stock) || stock<0){
+if(!name || !category || price<=0 || Number.isFinite(stock) || stock<0){
 $("productMessage").textContent="Enter valid product details";
 return;
 }
@@ -211,6 +212,7 @@ await addDoc(collection(db,"products"),{
 name:name,
 price:price,
 stock:stock,
+  stockUnit:stockUnit,
 category:category,
 imageUrls:imageUrls,
 vendorId:auth.currentUser.uid,
