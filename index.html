@@ -79,7 +79,16 @@ small{color:#666;overflow-wrap:anywhere}
 
 <input id="productName" placeholder="Product Name">
 <input id="productPrice" type="number" placeholder="Price (₹)">
-<input id="productStock" type="number" placeholder="Stock Quantity">
+<input id="productStock" type="number" step="0.001" placeholder="Stock Quantity">
+
+<select id="productStockUnit">
+<option value="kg">Kilogram (KG)</option>
+<option value="g">Gram (G)</option>
+<option value="piece">Piece</option>
+<option value="packet">Packet</option>
+<option value="litre">Litre</option>
+<option value="ml">ML</option>
+</select>
 <input id="productCategory" placeholder="Category">
 <label>Choose Product Photos (Maximum 4)</label>
 <input id="productImage" type="file" accept="image/*" multiple>
