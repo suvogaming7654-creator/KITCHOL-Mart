@@ -81,7 +81,9 @@ small{color:#666;overflow-wrap:anywhere}
 <input id="productPrice" type="number" placeholder="Price (₹)">
 <input id="productStock" type="number" placeholder="Stock Quantity">
 <input id="productCategory" placeholder="Category">
-<input id="productImage" placeholder="Product Image URL">
+<label>Choose Product Photo</label>
+<input id="productImage" type="file" accept="image/*">
+<img id="imagePreview" style="width:120px;display:none;">
 
 <button id="addProduct">Add Product</button>
 
