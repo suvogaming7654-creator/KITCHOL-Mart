@@ -190,6 +190,26 @@ console.log("Highlights:", $("productHighlights"));
  
 $("addProduct").onclick=async()=>{
 try{
+
+const ids=[
+"productImage",
+"productName",
+"productSKU",
+"productPrice",
+"productStock",
+"productStockUnit",
+"productCategory",
+"productDescription",
+"productHighlights",
+"productMessage"
+];
+
+const missing=ids.filter(id=>!$(id));
+
+if(missing.length){
+alert("Missing HTML ID: "+missing.join(", "));
+return;
+}
  
 const files=Array.from($("productImage").files);
 
