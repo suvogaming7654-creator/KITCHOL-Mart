@@ -3,80 +3,90 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>KITCHOL Mart</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f5f7f5;font-family:Arial;color:#222}
-header{background:#168447;color:white;padding:20px;text-align:center}
-main{max-width:500px;margin:auto;padding:16px}
+body{margin:0;background:#f3f7f3;font-family:Arial;color:#222}
+header{background:#168447;color:white;text-align:center;padding:20px}
+main{max-width:480px;margin:auto;padding:15px}
 .card{background:white;padding:18px;border-radius:14px;margin:12px 0}
 input,button{width:100%;padding:13px;margin:7px 0;border:1px solid #ddd;border-radius:8px;font-size:16px}
 button{background:#168447;color:white;border:0;font-weight:bold}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.product{background:#fff;padding:15px;border-radius:12px}
-.small{font-size:13px;color:#666}
-#dashboard{display:none}
+.secondary{background:#555}
+.hidden{display:none}
+#message{color:#168447;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <header>
 <h1>KITCHOL Mart</h1>
-<p>Your Local Grocery Marketplace</p>
+<p>Multi-Vendor Grocery Marketplace</p>
 </header>
-
 <main>
-<section id="loginPage" class="card">
-<h2>Customer Login</h2>
-<input id="email" type="email" placeholder="Email address">
-<input id="password" type="password" placeholder="Password">
-<button id="register">Create Account</button>
+
+<section id="authPage" class="card">
+<h2>Welcome to KITCHOL Mart</h2>
+<button onclick="showForm('customer')">Customer Registration</button>
+<button onclick="showForm('vendor')">Vendor / Shop Registration</button>
+
+<div id="customerForm" class="hidden">
+<h3>Customer Registration</h3>
+<input id="cEmail" type="email" placeholder="Email">
+<input id="cPass" type="password" placeholder="Password (6+ characters)">
+<button id="customerRegister">Create Customer Account</button>
+</div>
+
+<div id="vendorForm" class="hidden">
+<h3>Vendor Registration</h3>
+<input id="vShop" placeholder="Shop Name">
+<input id="vOwner" placeholder="Owner Name">
+<input id="vPhone" type="tel" placeholder="Mobile Number">
+<input id="vAddress" placeholder="Shop Address">
+<input id="vEmail" type="email" placeholder="Email">
+<input id="vPass" type="password" placeholder="Password (6+ characters)">
+<button id="vendorRegister">Register My Shop</button>
+</div>
+
+<hr>
+<h3>Login</h3>
+<input id="lEmail" type="email" placeholder="Email">
+<input id="lPass" type="password" placeholder="Password">
 <button id="login">Login</button>
-<p id="message" class="small"></p>
+<p id="message"></p>
 </section>
 
-<section id="dashboard">
+<section id="customerPage" class="hidden">
 <div class="card">
-<h2>Welcome to KITCHOL Mart!</h2>
+<h2>Welcome, Customer!</h2>
 <p>Shop groceries from local stores.</p>
-<button id="logout">Logout</button>
-</div>
-
-<div class="card">
-<h3>Search Products</h3>
-<input id="search" placeholder="Search grocery products">
-</div>
-
-<div class="card">
 <h3>Categories</h3>
-<div class="grid">
-<div>🥦 Vegetables</div>
-<div>🍎 Fruits</div>
-<div>🥛 Dairy</div>
-<div>🍚 Grocery</div>
-</div>
-</div>
-
-<div class="card">
-<h3>Popular Products</h3>
-<div class="grid" id="products">
-<div class="product">🍚<h4>Rice</h4><p>Sample product</p></div>
-<div class="product">🥔<h4>Potato</h4><p>Sample product</p></div>
-<div class="product">🥛<h4>Milk</h4><p>Sample product</p></div>
-<div class="product">🍎<h4>Apple</h4><p>Sample product</p></div>
-</div>
-<p class="small">Demo products only. Live shop listings will be connected next.</p>
+<p>🥦 Vegetables &nbsp; 🍎 Fruits</p>
+<p>🥛 Dairy &nbsp; 🍚 Grocery</p>
+<h3>More features coming soon</h3>
+<button id="customerLogout">Logout</button>
 </div>
 </section>
+
+<section id="vendorPage" class="hidden">
+<div class="card">
+<h2>Vendor Dashboard</h2>
+<p id="vendorStatus">Your shop registration is pending approval.</p>
+<button id="vendorLogout">Logout</button>
+</div>
+</section>
+
 </main>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,
-signInWithEmailAndPassword,onAuthStateChanged,signOut}
-from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc}
-from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+import {initializeApp} from
+"https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import {
+getAuth,createUserWithEmailAndPassword,
+signInWithEmailAndPassword,onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc} from
+"https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyDmAmX0wfWk-SrBz5ikKnULpMGd3zNrIZo",
@@ -90,69 +100,106 @@ appId:"1:631334576857:web:d3b3312bcdc12e472194c8"
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
-const msg=document.getElementById("message");
+const message=document.getElementById("message");
 
-async function saveProfile(user){
-const ref=doc(db,"users",user.uid);
-const snap=await getDoc(ref);
-if(!snap.exists()){
-await setDoc(ref,{
-email:user.email,
-role:"customer",
-status:"active",
+window.showForm=(type)=>{
+document.getElementById("customerForm").classList.toggle("hidden",type!=="customer");
+document.getElementById("vendorForm").classList.toggle("hidden",type!=="vendor");
+};
+
+function showPage(page){
+["authPage","customerPage","vendorPage"].forEach(id=>{
+document.getElementById(id).classList.add("hidden");
+});
+document.getElementById(page).classList.remove("hidden");
+}
+
+async function registerAccount(email,password,profile){
+const result=await createUserWithEmailAndPassword(auth,email,password);
+await setDoc(doc(db,"users",result.user.uid),{
+...profile,email:email,
 createdAt:new Date()
 });
-}
-}
-
-function showDashboard(show){
-document.getElementById("loginPage").style.display=show?"none":"block";
-document.getElementById("dashboard").style.display=show?"block":"none";
+return result.user;
 }
 
-document.getElementById("register").onclick=async()=>{
+document.getElementById("customerRegister").onclick=async()=>{
 try{
-msg.textContent="Creating account...";
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-const result=await createUserWithEmailAndPassword(auth,email,password);
-await saveProfile(result.user);
-msg.textContent="Account created!";
-}catch(e){msg.textContent=e.message;}
+message.textContent="Creating customer account...";
+const email=document.getElementById("cEmail").value.trim();
+const password=document.getElementById("cPass").value;
+await registerAccount(email,password,{
+role:"customer",status:"active"
+});
+message.textContent="Customer account created!";
+}catch(e){message.textContent=e.message;}
 };
+
+document.getElementById("vendorRegister").onclick=async()=>{
+try{
+message.textContent="Registering your shop...";
+const shop=document.getElementById("vShop").value.trim();
+const owner=document.getElementById("vOwner").value.trim();
+const phone=document.getElementById("vPhone").value.trim();
+const address=document.getElementById("vAddress").value.trim();
+const email=document.getElementById("vEmail").value.trim();
+const password=document.getElementById("vPass").value;
+
+if(!shop||!owner||!phone||!address||!email||!password){
+throw new Error("Please fill in all fields.");
+}
+await registerAccount(email,password,{
+role:"vendor",
+status:"pending",
+shopName:shop,
+ownerName:owner,
+phone:phone,
+address:address
+});
+message.textContent="Shop registered! Waiting for Admin approval.";
+}catch(e){message.textContent=e.message;}
+};
+
+async function openUserPage(user){
+const snap=await getDoc(doc(db,"users",user.uid));
+if(!snap.exists()){
+await signOut(auth);
+message.textContent="Profile not found. Please contact support.";
+return;
+}
+const data=snap.data();
+if(data.role==="customer"){
+showPage("customerPage");
+}else if(data.role==="vendor"){
+showPage("vendorPage");
+document.getElementById("vendorStatus").textContent=
+data.status==="active"?"Your shop is approved!":"Your shop is waiting for Admin approval.";
+}else{
+await signOut(auth);
+message.textContent="Account role not recognized.";
+}
+}
 
 document.getElementById("login").onclick=async()=>{
 try{
-msg.textContent="Logging in...";
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
+message.textContent="Logging in...";
+const email=document.getElementById("lEmail").value.trim();
+const password=document.getElementById("lPass").value;
 const result=await signInWithEmailAndPassword(auth,email,password);
-await saveProfile(result.user);
-showDashboard(true);
-}catch(e){msg.textContent=e.message;}
+await openUserPage(result.user);
+}catch(e){message.textContent=e.message;}
 };
 
-document.getElementById("logout").onclick=()=>signOut(auth);
+document.getElementById("customerLogout").onclick=()=>signOut(auth);
+document.getElementById("vendorLogout").onclick=()=>signOut(auth);
 
 onAuthStateChanged(auth,async user=>{
 if(user){
-try{
-await saveProfile(user);
-showDashboard(true);
-}catch(e){
-showDashboard(false);
-msg.textContent="Profile error: "+e.message;
-}
+try{await openUserPage(user);}
+catch(e){message.textContent=e.message;}
 }else{
-showDashboard(false);
+showPage("authPage");
 }
-});
-
-document.getElementById("search").addEventListener("input",e=>{
-const term=e.target.value.toLowerCase();
-document.querySelectorAll(".product").forEach(p=>{
-p.style.display=p.textContent.toLowerCase().includes(term)?"block":"none";
-});
 });
 </script>
 </body>
