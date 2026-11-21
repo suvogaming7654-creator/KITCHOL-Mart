@@ -103,6 +103,21 @@ placeholder="Product Highlights"></textarea>
 <p id="productMessage"></p>
 
 <button id="addProduct">Add Product</button>
+  <button id="previewProduct" type="button">
+Preview Product
+</button>
+
+<div id="productPreview" class="hidden">
+<h3>Product Preview</h3>
+<img id="previewImage" style="width:100%;max-width:250px;">
+<h4 id="previewName"></h4>
+<p id="previewSKU"></p>
+<p id="previewPrice"></p>
+<p id="previewStock"></p>
+<p id="previewCategory"></p>
+<p id="previewDescription"></p>
+<p id="previewHighlights"></p>
+</div>
 
 <p id="productMessage"></p>
 
@@ -187,6 +202,24 @@ return result.secure_url;
 console.log("Stock Unit:", $("productStockUnit"));
 console.log("Description:", $("productDescription"));
 console.log("Highlights:", $("productHighlights"));
+
+$("previewProduct").onclick=()=>{
+const files=Array.from($("productImage").files);
+
+$("previewName").textContent=$("productName").value;
+$("previewSKU").textContent="SKU: "+$("productSKU").value;
+$("previewPrice").textContent="Price: ₹"+$("productPrice").value;
+$("previewStock").textContent="Stock: "+$("productStock").value+" "+$("productStockUnit").value;
+$("previewCategory").textContent="Category: "+$("productCategory").value;
+$("previewDescription").textContent=$("productDescription").value;
+$("previewHighlights").textContent=$("productHighlights").value;
+
+if(files.length>0){
+$("previewImage").src=URL.createObjectURL(files[0]);
+}
+
+$("productPreview").classList.remove("hidden");
+};
  
 $("addProduct").onclick=async()=>{
 try{
