@@ -89,7 +89,7 @@ small{color:#666;overflow-wrap:anywhere}
 <option value="litre">Litre</option>
 <option value="ml">ML</option>
 </select>
-<input id="productCategory" placeholder="Category">
+ id="productC<inputategory" placeholder="Category">
   <textarea id="productDescription"
 placeholder="Product Description"></textarea>
 
@@ -190,6 +190,8 @@ const price=Number($("productPrice").value);
 const stock=Number($("productStock").value);
   const stockUnit=$("productStockUnit").value;
 const category=$("productCategory").value.trim();
+  const description=$("productDescription").value.trim();
+const highlights=$("productHighlights").value.trim();
 
 if(!name || !category || price<=0 || !Number.isFinite(stock) || stock<0){
 $("productMessage").textContent="Enter valid product details";
