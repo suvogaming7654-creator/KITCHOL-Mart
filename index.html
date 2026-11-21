@@ -143,7 +143,26 @@ const ADMIN_UID="QdvcAdeQb2QLRtpmE5YtGB0R9P92";
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
+async function uploadProductPhoto(file){
+const url="https://api.cloudinary.com/v1_1/zu6bsipy/image/upload";
 
+const formData=new FormData();
+formData.append("file",file);
+formData.append("upload_preset","kitchol_products");
+
+const response=await fetch(url,{
+method:"POST",
+body:formData
+});
+
+const result=await response.json();
+
+if(!response.ok){
+throw new Error(result.error?.message || "Photo upload failed");
+}
+
+return result.secure_url;
+}
 const $=id=>document.getElementById(id);
   $("productImage").onchange=()=>{
 const file=$("productImage").files[0];
