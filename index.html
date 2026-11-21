@@ -144,6 +144,8 @@ const ADMIN_UID="QdvcAdeQb2QLRtpmE5YtGB0R9P92";
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
+  const $=id=>document.getElementById(id);
+  
 async function uploadProductPhoto(file){
   const url="https://api.cloudinary.com/v1_1/zu6bsipy/image/upload";
 
@@ -224,43 +226,8 @@ $("addProduct").disabled=false;
 };
   
 
-await addDoc(collection(db,"products"),{
-name:$("productName").value.trim(),
-price:Number($("productPrice").value),
-stock:Number($("productStock").value),
-category:$("productCategory").value.trim(),
-imageUrls:imageUrls,
-vendorId:auth.currentUser.uid,
-createdAt:serverTimestamp()
-});
 
-$("productMessage").textContent="Product saved successfully!";
 
-}catch(e){
-$("productMessage").textContent=e.message;
-}
-};
-  
-const url="https://api.cloudinary.com/v1_1/zu6bsipy/image/upload";
-
-const formData=new FormData();
-formData.append("file",file);
-formData.append("upload_preset","kitchol_products");
-
-const response=await fetch(url,{
-method:"POST",
-body:formData
-});
-
-const result=await response.json();
-
-if(!response.ok){
-throw new Error(result.error?.message || "Photo upload failed");
-}
-
-return result.secure_url;
-}
-const $=id=>document.getElementById(id);
   $("productImage").onchange=()=>{
 const files=Array.from($("productImage").files);
 const preview=$("imagePreview");
