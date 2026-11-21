@@ -568,6 +568,103 @@ $("adminMessage").textContent="Update failed: "+e.message;
 
 $("refreshVendors").onclick=loadAdminVendors;
 
+ async function loadAddresses(uid){
+try{
+const list=$("addressList");
+list.textContent="Loading addresses...";
+
+const snapshot=await getDocs(
+collection(db,"users",uid,"addresses")
+);
+
+list.innerHTML="";
+
+if(snapshot.empty){
+list.textContent="No saved addresses yet.";
+return;
+}
+
+snapshot.forEach(item=>{
+const a=item.data();
+
+const card=document.createElement("div");
+card.className="card";
+
+const details=document.createElement("p");
+details.textContent=
+a.name+" | "+a.phone+"\n"+
+a.house+", "+a.street+", "+a.city+"\n"+
+a.post+", "+a.pin+", "+a.district+", "+a.state+
+" ("+a.type+")";
+
+card.appendChild(details);
+list.appendChild(card);
+});
+
+}catch(e){
+$("addressList").textContent="Error: "+e.message;
+}
+}
+
+$("addAddress").onclick=()=>{
+$("addressForm").classList.remove("hidden");
+};
+
+$("cancelAddress").onclick=()=>{
+$("addressForm").classList.add("hidden");
+};
+
+$("saveAddress").onclick=async()=>{
+try{
+const uid=auth.currentUser.uid;
+
+const address={
+name:$("addressName").value.trim(),
+phone:$("addressPhone").value.trim(),
+house:$("addressHouse").value.trim(),
+street:$("addressStreet").value.trim(),
+city:$("addressCity").value.trim(),
+post:$("addressPost").value.trim(),
+pin:$("addressPin").value.trim(),
+district:$("addressDistrict").value.trim(),
+state:$("addressState").value.trim(),
+type:$("addressType").value
+};
+
+if(Object.values(address).some(v=>!v)){
+$("addressMessage").textContent="Fill all address fields.";
+return;
+}
+
+$("saveAddress").disabled=true;
+$("addressMessage").textContent="Saving address...";
+
+await addDoc(
+collection(db,"users",uid,"addresses"),
+{
+...address,
+createdAt:serverTimestamp()
+}
+);
+
+$("addressMessage").textContent="Address saved successfully!";
+
+[
+"addressName","addressPhone","addressHouse",
+"addressStreet","addressCity","addressPost",
+"addressPin","addressDistrict","addressState"
+].forEach(id=>$(id).value="");
+
+$("addressForm").classList.add("hidden");
+await loadAddresses(uid);
+
+}catch(e){
+$("addressMessage").textContent="Error: "+e.message;
+}finally{
+$("saveAddress").disabled=false;
+}
+};
+ 
 async function openUserPage(user){
 if(user.uid===ADMIN_UID){
 showPage("adminPage");
