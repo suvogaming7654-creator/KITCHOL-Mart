@@ -588,6 +588,7 @@ const data=snap.data();
 
 if(data.role==="customer"){
 showPage("customerPage");
+await loadAddresses(user.uid);
 }else if(data.role==="vendor"){
 showPage("vendorPage");
 $("vendorStatus").textContent=
