@@ -182,6 +182,11 @@ throw new Error(result.error?.message || "Photo upload failed");
 return result.secure_url;
 }
 
+ console.log("SKU:", $("productSKU"));
+console.log("Stock Unit:", $("productStockUnit"));
+console.log("Description:", $("productDescription"));
+console.log("Highlights:", $("productHighlights"));
+ 
 $("addProduct").onclick=async()=>{
 try{
 const files=Array.from($("productImage").files);
