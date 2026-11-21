@@ -107,7 +107,15 @@ small{color:#666;overflow-wrap:anywhere}
 <script type="module">
 import {initializeApp} from
 "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+query,
+where,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 import {
 getAuth,createUserWithEmailAndPassword,
 signInWithEmailAndPassword,onAuthStateChanged,signOut
