@@ -464,6 +464,7 @@ async function openUserPage(user){
 if(user.uid===ADMIN_UID){
 showPage("adminPage");
 await loadAdminVendors();
+await loadAdminProducts();
 return;
 }
 
