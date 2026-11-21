@@ -105,26 +105,25 @@ small{color:#666;overflow-wrap:anywhere}
 </main>
 
 <script type="module">
-import {initializeApp} from
-"https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
 import {
 getFirestore,
+doc,
+getDoc,
+setDoc,
 collection,
 addDoc,
 getDocs,
 query,
 where,
+updateDoc,
 serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
 import {
 getAuth,createUserWithEmailAndPassword,
 signInWithEmailAndPassword,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-import {
-getFirestore,doc,getDoc,setDoc,
-collection,getDocs,updateDoc
-} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyDmAmX0wfWk-SrBz5ikKnULpMGd3zNrIZo",
