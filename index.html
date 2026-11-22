@@ -163,6 +163,129 @@ small{color:#666;overflow-wrap:anywhere}
   margin-top:8px;
 }
   
+.premium-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff;
+  padding:18px;
+  border-radius:14px;
+  border-bottom:3px solid #087d32;
+}
+
+.premium-header h2 {
+  color:#087d32;
+  margin:0;
+  font-size:25px;
+}
+
+.premium-header h2 span {
+  color:#e32636;
+}
+
+.premium-header small {
+  color:#777;
+}
+
+.premium-cart {
+  font-size:28px;
+  background:#eaf7ed;
+  padding:10px;
+  border-radius:12px;
+}
+
+.premium-welcome {
+  padding:12px 4px;
+}
+
+.premium-welcome h3 {
+  margin-bottom:4px;
+  color:#222;
+}
+
+.premium-welcome p {
+  color:#777;
+  margin-top:4px;
+}
+
+.premium-banner {
+  background:linear-gradient(120deg,#087d32,#48c66b);
+  color:white;
+  padding:25px 18px;
+  border-radius:18px;
+  margin:15px 0;
+  box-shadow:0 5px 15px #087d3230;
+}
+
+.premium-banner h2 {
+  font-size:27px;
+  margin:10px 0;
+}
+
+.premium-banner p {
+  margin-bottom:0;
+}
+
+.section-heading {
+  margin-top:22px;
+}
+
+.premium-categories {
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:10px 0;
+}
+
+.premium-categories button {
+  min-width:75px;
+  background:#fff;
+  color:#087d32;
+  border:1px solid #e1eee3;
+  border-radius:14px;
+  padding:12px 8px;
+  font-size:24px;
+}
+
+.premium-categories small {
+  display:block;
+  font-size:11px;
+  margin-top:6px;
+}
+
+.product-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:20px;
+}
+
+.product-heading small {
+  color:#777;
+}
+
+.premium-address {
+  background:#fff;
+  padding:15px;
+  border-radius:15px;
+  margin-top:25px;
+}
+
+.premium-address h3 {
+  color:#087d32;
+}
+
+.premium-address p {
+  color:#777;
+}
+
+.premium-address #addressList .card {
+  border:1px solid #e5eee7;
+  border-radius:12px;
+  padding:10px;
+  margin:10px 0;
+  }
+  
 </style>
 </head>
 <body>
@@ -235,93 +358,132 @@ small{color:#666;overflow-wrap:anywhere}
 <div class="shop-banner">
   <h2>Save More, Live Better!</h2>
   <p>Best Quality Products at Best Price</p>
-</div>
 
-<h3>🛒 Shop Products</h3>
-<div id="customerProductList">
-  Loading Products...
-</div>
+<section id="customerPage" class="card hidden">
 
-<nav class="shop-bottom-nav">
-  <button>🏠<br>Home</button>
-  <button>▦<br>Categories</button>
-  <button>🛒<br>Cart</button>
-  <button>📋<br>My Orders</button>
-  <button>👤<br>My Account</button>
-</nav>
- 
-<p>🥛 Dairy | 🍚 Grocery</p>
-<h3>📍 My Delivery Addresses</h3>
+  <div class="premium-header">
+    <div>
+      <h2>KITCHOL <span>Mart</span></h2>
+      <small>Shop Smart, Live Better</small>
+    </div>
+    <div class="premium-cart">🛒</div>
+  </div>
 
-<div id="addressList">
-No saved addresses yet.
-</div>
+  <div class="premium-welcome">
+    <h3>Welcome to KITCHOL Mart! 👋</h3>
+    <p>Your daily shopping made easy.</p>
+  </div>
 
-<button id="addAddress" type="button">
-+ Add New Address
-</button>
+  <div class="shop-search">
+    <input id="productSearch" type="search"
+      placeholder="🔍 Search products...">
+    <button id="searchProducts">Search</button>
+  </div>
 
-<div id="addressForm" class="hidden">
-<h3>Add Delivery Address</h3>
-<input id="addressName" placeholder="Customer Name">
-<input id="addressPhone" type="tel" placeholder="Mobile Number">
-<input id="addressHouse" placeholder="House / Flat Number">
-<input id="addressStreet" placeholder="Street / Area">
-<input id="addressCity" placeholder="Village / Town">
-<input id="addressPost" placeholder="Post Office">
-<input id="addressPin" placeholder="PIN Code">
-<input id="addressDistrict" placeholder="District">
-<select id="addressState" required>
-<option value="">Select State / UT</option>
-<option>Andhra Pradesh</option>
-<option>Arunachal Pradesh</option>
-<option>Assam</option>
-<option>Bihar</option>
-<option>Chhattisgarh</option>
-<option>Goa</option>
-<option>Gujarat</option>
-<option>Haryana</option>
-<option>Himachal Pradesh</option>
-<option>Jharkhand</option>
-<option>Karnataka</option>
-<option>Kerala</option>
-<option>Madhya Pradesh</option>
-<option>Maharashtra</option>
-<option>Manipur</option>
-<option>Meghalaya</option>
-<option>Mizoram</option>
-<option>Nagaland</option>
-<option>Odisha</option>
-<option>Punjab</option>
-<option>Rajasthan</option>
-<option>Sikkim</option>
-<option>Tamil Nadu</option>
-<option>Telangana</option>
-<option>Tripura</option>
-<option>Uttar Pradesh</option>
-<option>Uttarakhand</option>
-<option>West Bengal</option>
-<option>Andaman and Nicobar Islands</option>
-<option>Chandigarh</option>
-<option>Dadra and Nagar Haveli and Daman and Diu</option>
-<option>Delhi</option>
-<option>Jammu and Kashmir</option>
-<option>Ladakh</option>
-<option>Lakshadweep</option>
-<option>Puducherry</option>
-</select>
+  <div class="premium-banner">
+    <small>WELCOME SHOPPERS</small>
+    <h2>Save More,<br>Live Better!</h2>
+    <p>Best Quality Products at Best Price</p>
+  </div>
 
-<select id="addressType">
-<option value="Home">Home</option>
-<option value="Office">Office</option>
-</select>
+  <h3 class="section-heading">Shop By Category</h3>
 
-<button id="saveAddress" type="button">Save Address</button>
-<button id="cancelAddress" type="button">Cancel</button>
-<p id="addressMessage"></p>
-</div>
-<button id="customerLogout">Logout</button>
+  <div class="premium-categories">
+    <button class="categoryBtn" data-category="All">🛍️<small>All</small></button>
+    <button class="categoryBtn" data-category="Grocery">🍚<small>Grocery</small></button>
+    <button class="categoryBtn" data-category="Kitchen">🍳<small>Kitchen</small></button>
+    <button class="categoryBtn" data-category="Storage">📦<small>Storage</small></button>
+    <button class="categoryBtn" data-category="Home Decor">🏠<small>Home Decor</small></button>
+  </div>
+
+  <div class="product-heading">
+    <h3>🛒 Featured Products</h3>
+    <small>Explore our collection</small>
+  </div>
+
+  <div id="customerProductList">
+    Loading Products...
+  </div>
+
+  <div class="premium-address">
+    <h3>📍 My Delivery Addresses</h3>
+    <p>Manage your delivery locations</p>
+
+    <div id="addressList">
+      No saved addresses yet.
+    </div>
+
+    <button id="addAddress" type="button">
+      + Add New Address
+    </button>
+
+    <div id="addressForm" class="hidden">
+      <h3>Add Delivery Address</h3>
+
+      <input id="addressName" placeholder="Customer Name">
+      <input id="addressPhone" type="tel" placeholder="Mobile Number">
+      <input id="addressHouse" placeholder="House / Flat Number">
+      <input id="addressStreet" placeholder="Street / Area">
+      <input id="addressCity" placeholder="Village / Town">
+      <input id="addressPost" placeholder="Post Office">
+      <input id="addressPin" placeholder="PIN Code">
+      <input id="addressDistrict" placeholder="District">
+
+      <select id="addressState" required>
+        <option value="">Select State / UT</option>
+        <option>Andhra Pradesh</option>
+        <option>Arunachal Pradesh</option>
+        <option>Assam</option>
+        <option>Bihar</option>
+        <option>Chhattisgarh</option>
+        <option>Goa</option>
+        <option>Gujarat</option>
+        <option>Haryana</option>
+        <option>Himachal Pradesh</option>
+        <option>Jharkhand</option>
+        <option>Karnataka</option>
+        <option>Kerala</option>
+        <option>Madhya Pradesh</option>
+        <option>Maharashtra</option>
+        <option>Manipur</option>
+        <option>Meghalaya</option>
+        <option>Mizoram</option>
+        <option>Nagaland</option>
+        <option>Odisha</option>
+        <option>Punjab</option>
+        <option>Rajasthan</option>
+        <option>Sikkim</option>
+        <option>Tamil Nadu</option>
+        <option>Telangana</option>
+        <option>Tripura</option>
+        <option>Uttar Pradesh</option>
+        <option>Uttarakhand</option>
+        <option>West Bengal</option>
+        <option>Andaman and Nicobar Islands</option>
+        <option>Chandigarh</option>
+        <option>Dadra and Nagar Haveli and Daman and Diu</option>
+        <option>Delhi</option>
+        <option>Jammu and Kashmir</option>
+        <option>Ladakh</option>
+        <option>Lakshadweep</option>
+        <option>Puducherry</option>
+      </select>
+
+      <select id="addressType">
+        <option value="Home">Home</option>
+        <option value="Office">Office</option>
+      </select>
+
+      <button id="saveAddress" type="button">Save Address</button>
+      <button id="cancelAddress" type="button">Cancel</button>
+      <p id="addressMessage"></p>
+    </div>
+  </div>
+
+  <button id="customerLogout">Logout</button>
+
 </section>
+  
 
 <section id="vendorPage" class="card hidden">
 <h2>Vendor Dashboard</h2>
@@ -780,6 +942,7 @@ $("adminProductList").textContent="Error: "+e.message;
 }
  }
 
+
 async function loadCustomerProducts(){
 try{
 const list=$("customerProductList");
@@ -791,25 +954,47 @@ where("status","==","approved")
 );
 
 const snapshot=await getDocs(q);
+
+const products=snapshot.docs.map(item=>({
+id:item.id,
+...item.data()
+}));
+
+let selectedCategory="All";
+
+function renderProducts(){
+const search=$("productSearch").value
+.trim().toLowerCase();
+
+const filtered=products.filter(p=>{
+const matchesSearch=
+(p.name||"").toLowerCase().includes(search);
+
+const matchesCategory=
+selectedCategory==="All" ||
+(p.category||"").toLowerCase()===
+selectedCategory.toLowerCase();
+
+return matchesSearch && matchesCategory;
+});
+
 list.innerHTML="";
 
-if(snapshot.empty){
-list.textContent="No products available.";
+if(filtered.length===0){
+list.textContent="No matching products found.";
 return;
 }
 
-snapshot.forEach(item=>{
-const p=item.data();
-
+filtered.forEach(p=>{
 const card=document.createElement("div");
 card.className="product-card";
 
 const img=document.createElement("img");
-img.src=p.imageUrls?.[0] || "";
-img.alt=p.name || "Product";
+img.src=p.imageUrls?.[0]||"";
+img.alt=p.name||"Product";
 
 const name=document.createElement("h4");
-name.textContent=p.name || "No Name";
+name.textContent=p.name||"No Name";
 
 const price=document.createElement("p");
 price.textContent="₹"+p.price;
@@ -823,6 +1008,20 @@ alert(p.name+" selected!");
 card.append(img,name,price,add);
 list.appendChild(card);
 });
+}
+
+$("productSearch").oninput=renderProducts;
+
+$("searchProducts").onclick=renderProducts;
+
+document.querySelectorAll(".categoryBtn").forEach(btn=>{
+btn.onclick=()=>{
+selectedCategory=btn.dataset.category;
+renderProducts();
+};
+});
+
+renderProducts();
 
 }catch(e){
 $("customerProductList").textContent="Error: "+e.message;
