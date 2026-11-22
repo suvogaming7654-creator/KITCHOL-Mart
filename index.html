@@ -724,13 +724,24 @@ return;
 $("saveAddress").disabled=true;
 $("addressMessage").textContent="Saving address...";
 
+const editId=$("saveAddress").dataset.editId;
+
+if(editId){
+await updateDoc(
+doc(db,"users",uid,"addresses",editId),
+address
+);
+$("saveAddress").dataset.editId="";
+}else{
 await addDoc(
 collection(db,"users",uid,"addresses"),
 {
 ...address,
+isDefault:false,
 createdAt:serverTimestamp()
 }
 );
+}
 
 $("addressMessage").textContent="Address saved successfully!";
 
