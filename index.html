@@ -1737,6 +1737,49 @@ btn.textContent="🛒 My Cart";
 };
 
   
+window.showCustomerSection=async function(section){
+
+const products=$("customerProductList");
+const cart=$("customerCartPage");
+const cartButton=$("openCartButton");
+
+if(section==="home"){
+cart.classList.add("hidden");
+products.classList.remove("hidden");
+cartButton.textContent="🛒 My Cart";
+window.scrollTo(0,0);
+}
+
+if(section==="categories"){
+cart.classList.add("hidden");
+products.classList.remove("hidden");
+cartButton.textContent="🛒 My Cart";
+document.querySelector(".premium-categories")
+.scrollIntoView({behavior:"smooth"});
+}
+
+if(section==="cart"){
+products.classList.add("hidden");
+cart.classList.remove("hidden");
+cartButton.textContent="← Continue Shopping";
+
+if(auth.currentUser){
+await loadCart(auth.currentUser.uid);
+}
+window.scrollTo(0,0);
+}
+
+if(section==="profile"){
+cart.classList.add("hidden");
+products.classList.remove("hidden");
+cartButton.textContent="🛒 My Cart";
+document.querySelector(".premium-address")
+.scrollIntoView({behavior:"smooth"});
+}
+
+};
+  
+  
 </script>
 </body>
 </html>
