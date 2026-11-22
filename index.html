@@ -674,6 +674,23 @@ input, textarea, select {
   font-size: 27px;
   white-space: nowrap;
 }
+ 
+/* Bottom navigation: 4 buttons */
+.customer-bottom-nav {
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+/* Account button: top left */
+.customer-bottom-nav button:last-child {
+  position: fixed;
+  top: 80px;
+  left: 12px;
+  width: 85px;
+  z-index: 10000;
+  background: #f28c28;
+  border-radius: 12px;
+  padding: 10px 5px;
+}
   
   
 </style>
