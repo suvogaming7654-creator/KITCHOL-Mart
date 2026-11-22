@@ -1216,6 +1216,7 @@ const data=snap.data();
 if(data.role==="customer"){
 showPage("customerPage");
   await loadCustomerProducts();
+  alert("Customer Products Loading Started");
 await loadAddresses(user.uid);
 }else if(data.role==="vendor"){
 showPage("vendorPage");
