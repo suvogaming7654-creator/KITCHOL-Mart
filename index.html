@@ -1252,9 +1252,42 @@ price.textContent="₹"+p.price;
 const add=document.createElement("button");
 add.textContent="Add to Cart";
 
-add.onclick=()=>{
-alert(p.name+" selected!");
+
+add.onclick=async()=>{
+try{
+const uid=auth.currentUser?.uid;
+
+if(!uid){
+alert("Please login first");
+return;
+}
+
+const cartRef=doc(db,"users",uid,"cart",p.id);
+const cartSnap=await getDoc(cartRef);
+
+if(cartSnap.exists()){
+await updateDoc(cartRef,{
+quantity:(cartSnap.data().quantity||1)+1,
+updatedAt:serverTimestamp()
+});
+}else{
+await setDoc(cartRef,{
+productId:p.id,
+name:p.name||"Product",
+price:Number(p.price)||0,
+imageUrl:p.imageUrls?.[0]||"",
+quantity:1,
+createdAt:serverTimestamp()
+});
+}
+
+alert("Added to Cart Successfully!");
+
+}catch(e){
+alert("Cart Error: "+e.message);
+}
 };
+  
 
 card.append(img,name,price,add);
 list.appendChild(card);
