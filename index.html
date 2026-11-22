@@ -1180,6 +1180,62 @@ $("adminProductList").textContent="Error: "+e.message;
  }
 
 
+async function loadCart(uid){
+try{
+const cartItems=$("cartItems");
+const cartTotal=$("cartTotal");
+
+cartItems.textContent="Loading Cart...";
+
+const snapshot=await getDocs(
+collection(db,"users",uid,"cart")
+);
+
+cartItems.innerHTML="";
+
+if(snapshot.empty){
+cartItems.textContent="Your cart is empty.";
+cartTotal.textContent="Total: ₹0";
+return;
+}
+
+let total=0;
+
+snapshot.forEach(item=>{
+const p=item.data();
+const quantity=p.quantity||1;
+const price=Number(p.price)||0;
+
+total+=price*quantity;
+
+const card=document.createElement("div");
+card.className="product-card";
+
+const name=document.createElement("h4");
+name.textContent=p.name;
+
+const priceText=document.createElement("p");
+priceText.textContent="₹"+price+" × "+quantity;
+
+const remove=document.createElement("button");
+remove.textContent="Remove";
+
+remove.onclick=async()=>{
+await deleteDoc(item.ref);
+await loadCart(uid);
+};
+
+card.append(name,priceText,remove);
+cartItems.appendChild(card);
+});
+
+cartTotal.textContent="Total: ₹"+total;
+
+}catch(e){
+$("cartItems").textContent="Cart Error: "+e.message;
+}
+}
+  
 
 async function loadCustomerProducts(){
 try{
