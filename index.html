@@ -971,8 +971,6 @@ $("adminProductList").textContent="Error: "+e.message;
 
 async function loadCustomerProducts(){
 try{
-  console.log("Customer Products Function Started");
-alert("Product Function Started");
 const list=$("customerProductList");
 list.textContent="Loading Products...";
 
@@ -1246,7 +1244,6 @@ const data=snap.data();
 if(data.role==="customer"){
 showPage("customerPage");
   await loadCustomerProducts();
-  alert("Customer Products Loading Started");
 await loadAddresses(user.uid);
 }else if(data.role==="vendor"){
 showPage("vendorPage");
