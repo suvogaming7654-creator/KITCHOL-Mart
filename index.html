@@ -738,7 +738,58 @@ list.appendChild(card);
 $("adminProductList").textContent="Error: "+e.message;
 }
  }
- 
+
+async function loadCustomerProducts(){
+try{
+const list=$("customerProductList");
+list.textContent="Loading Products...";
+
+const q=query(
+collection(db,"products"),
+where("status","==","approved")
+);
+
+const snapshot=await getDocs(q);
+list.innerHTML="";
+
+if(snapshot.empty){
+list.textContent="No products available.";
+return;
+}
+
+snapshot.forEach(item=>{
+const p=item.data();
+
+const card=document.createElement("div");
+card.className="product-card";
+
+const img=document.createElement("img");
+img.src=p.imageUrls?.[0] || "";
+img.alt=p.name || "Product";
+
+const name=document.createElement("h4");
+name.textContent=p.name || "No Name";
+
+const price=document.createElement("p");
+price.textContent="₹"+p.price;
+
+const add=document.createElement("button");
+add.textContent="Add to Cart";
+add.onclick=()=>{
+alert(p.name+" selected!");
+};
+
+card.append(img,name,price,add);
+list.appendChild(card);
+});
+
+}catch(e){
+$("customerProductList").textContent="Error: "+e.message;
+}
+}
+  
+
+  
 async function changeStatus(uid,status){
 try{
 await updateDoc(doc(db,"users",uid),{status});
@@ -924,6 +975,7 @@ const data=snap.data();
 
 if(data.role==="customer"){
 showPage("customerPage");
+  await loadCustomerProducts();
 await loadAddresses(user.uid);
 }else if(data.role==="vendor"){
 showPage("vendorPage");
