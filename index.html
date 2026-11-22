@@ -1936,7 +1936,13 @@ cartButton.textContent="🛒 My Cart";
 document.querySelector(".premium-address")
 .scrollIntoView({behavior:"smooth"});
 }
-
+if(section==="orders"){
+cart.classList.add("hidden");
+products.classList.remove("hidden");
+cartButton.textContent="🛒 My Cart";
+alert("Your Orders section will be available soon!");
+window.scrollTo(0,0);
+}
 };
   
   
