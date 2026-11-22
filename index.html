@@ -642,6 +642,38 @@ input, textarea, select {
 #customerPage {
   padding-bottom: 85px;
 }
+ 
+.fresh-guarantee {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: #e9f7e9;
+  border: 1px solid #cde8ce;
+  border-radius: 16px;
+  padding: 18px 14px;
+  margin: 20px 0;
+  color: #087d32;
+}
+
+.fresh-guarantee h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.fresh-guarantee p {
+  margin: 5px 0;
+  font-size: 13px;
+}
+
+.fresh-guarantee strong {
+  font-size: 12px;
+}
+
+.fresh-icon {
+  font-size: 27px;
+  white-space: nowrap;
+}
   
   
 </style>
@@ -692,13 +724,31 @@ input, textarea, select {
 
 <section id="customerPage" class="card hidden">
 
-  <div class="premium-header">
+  
+<div class="premium-header">
+  <div class="location-info">
+    <span>📍</span>
     <div>
-      <h2>KITCHOL <span>Mart</span></h2>
-      <small>Shop Smart, Live Better</small>
+      <strong>KITCHOL Mart</strong>
+      <small>Delivering to your doorstep</small>
     </div>
-    <div class="premium-cart">🛒</div>
   </div>
+
+  <div class="header-actions">
+    <button type="button"
+      onclick="document.getElementById('productSearch').focus()">🔍</button>
+
+    <button type="button" class="premium-cart"
+      onclick="document.getElementById('openCartButton').click()">🛒</button>
+  </div>
+</div>
+
+<div class="shop-search">
+  <input id="productSearch" type="search"
+    placeholder="Search vegetables, grocery and more...">
+  <button id="searchProducts" type="button">Search</button>
+</div>
+  
 
   <div class="premium-welcome">
     <h3>Welcome to KITCHOL Mart! 👋</h3>
@@ -711,41 +761,87 @@ input, textarea, select {
     <button id="searchProducts">Search</button>
   </div>
 
-  <div class="premium-banner">
-    <small>WELCOME SHOPPERS</small>
-    <h2>Save More,<br>Live Better!</h2>
-    <p>Best Quality Products at Best Price</p>
+  
+<div class="premium-banner">
+  <div class="banner-content">
+    <small>FRESH & HEALTHY</small>
+    <h2>Fresh Vegetables<br>Every Day!</h2>
+    <p>Farm Fresh Products at Best Prices</p>
+    <strong>SHOP NOW →</strong>
   </div>
+  <div class="banner-emoji">🥦🥕🍅</div>
+</div>
+  
 
   <h3 class="section-heading">Shop By Category</h3>
 
-  <div class="premium-categories">
-    <button class="categoryBtn" data-category="All">🛍️<small>All</small></button>
-    <button class="categoryBtn" data-category="Grocery">🍚<small>Grocery</small></button>
-    <button class="categoryBtn" data-category="Kitchen">🍳<small>Kitchen</small></button>
-    <button class="categoryBtn" data-category="Storage">📦<small>Storage</small></button>
-    <button class="categoryBtn" data-category="Home Decor">🏠<small>Home Decor</small></button>
-  </div>
 
-  <div class="product-heading">
-    <h3>🛒 Featured Products</h3>
-    <small>Explore our collection</small>
+<div class="premium-categories">
+
+  <button class="categoryBtn" data-category="All">
+    <span>🛍️</span>
+    <small>All</small>
+  </button>
+
+  <button class="categoryBtn" data-category="Grocery">
+    <span>🍚</span>
+    <small>Grocery</small>
+  </button>
+
+  <button class="categoryBtn" data-category="Kitchen">
+    <span>🍳</span>
+    <small>Kitchen</small>
+  </button>
+
+  <button class="categoryBtn" data-category="Storage">
+    <span>📦</span>
+    <small>Storage</small>
+  </button>
+
+  <button class="categoryBtn" data-category="Home Decor">
+    <span>🏠</span>
+    <small>Home Decor</small>
+  </button>
+
+</div>
+  
+
+  
+<div class="product-heading">
+  <div>
+    <h3>⭐ Best Sellers</h3>
+    <small>Our most popular products</small>
   </div>
+  <span>View All →</span>
+</div>
+  
   
 <button id="openCartButton" type="button">
 🛒 My Cart
 </button>
   
-  <div id="customerProductList">
-    Loading Products...
-  </div>
   
+<div id="customerProductList">
+  Loading Products...
+</div>
+
+<div class="fresh-guarantee">
+  <div>
+    <h3>🌿 Freshness Guaranteed!</h3>
+    <p>Fresh Products, Best Quality, Every Time.</p>
+    <strong>Shop Fresh. Live Healthy.</strong>
+  </div>
+  <div class="fresh-icon">🥬🍎🥕</div>
+</div>
+
 <div id="customerCartPage" class="hidden">
   <h2>🛒 My Shopping Cart</h2>
   <div id="cartItems">Your cart is empty.</div>
   <h3 id="cartTotal">Total: ₹0</h3>
   <button id="checkoutButton">Proceed to Checkout</button>
 </div>
+  
+  
   
 
   <div class="premium-address">
@@ -823,12 +919,36 @@ input, textarea, select {
     </div>
   </div>
 
-  <div class="customer-bottom-nav">
-  <button type="button" onclick="showCustomerSection('home')">🏠<small>Home</small></button>
-  <button type="button" onclick="showCustomerSection('categories')">📂<small>Categories</small></button>
-  <button type="button" onclick="showCustomerSection('cart')">🛒<small>Cart</small></button>
-  <button type="button" onclick="showCustomerSection('profile')">👤<small>Profile</small></button>
-  </div>
+  
+<div class="customer-bottom-nav">
+
+  <button type="button"
+    onclick="showCustomerSection('home')">
+    🏠<small>Home</small>
+  </button>
+
+  <button type="button"
+    onclick="showCustomerSection('categories')">
+    📂<small>Categories</small>
+  </button>
+
+  <button type="button"
+    onclick="document.getElementById('productSearch').focus(); window.scrollTo(0,0)">
+    🔍<small>Search</small>
+  </button>
+
+  <button type="button"
+    onclick="showCustomerSection('orders')">
+    📦<small>Orders</small>
+  </button>
+
+  <button type="button"
+    onclick="showCustomerSection('profile')">
+    👤<small>Account</small>
+  </button>
+
+</div>
+  
   
   <button id="customerLogout">Logout</button>
 
