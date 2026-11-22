@@ -692,6 +692,25 @@ input, textarea, select {
   padding: 10px 5px;
 }
   
+/* Account button at top left */
+.top-account-button {
+  display: inline-block;
+  width: auto;
+  background: #f28c28;
+  color: white;
+  padding: 11px 18px;
+  margin: 8px 0 12px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Hide old Account button from bottom navigation */
+.customer-bottom-nav button:last-child {
+  display: none !important;
+}
+  
   
 </style>
 </head>
@@ -741,6 +760,12 @@ input, textarea, select {
 
 <section id="customerPage" class="card hidden">
 
+<button class="top-account-button"
+  type="button"
+  onclick="showCustomerSection('profile')">
+  👤 Account
+</button>
+  
   
 <div class="premium-header">
   <div class="location-info">
