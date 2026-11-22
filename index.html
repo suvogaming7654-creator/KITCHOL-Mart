@@ -1576,6 +1576,7 @@ if(data.role==="customer"){
 showPage("customerPage");
   await loadCustomerProducts();
 await loadAddresses(user.uid);
+  await loadCart(user.uid);
 }else if(data.role==="vendor"){
 showPage("vendorPage");
 $("vendorStatus").textContent=
