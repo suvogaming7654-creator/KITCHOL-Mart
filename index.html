@@ -956,6 +956,7 @@ where("status","==","approved")
 );
 
 const snapshot=await getDocs(q);
+alert("Products Found: "+snapshot.size);
 
 const products=snapshot.docs.map(item=>({
 id:item.id,
