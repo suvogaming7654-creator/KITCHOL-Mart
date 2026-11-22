@@ -969,9 +969,16 @@ $("adminProductList").textContent="Error: "+e.message;
  }
 
 
+
 async function loadCustomerProducts(){
 try{
+
 const list=$("customerProductList");
+
+if(!list){
+throw new Error("customerProductList HTML ID not found");
+}
+
 list.textContent="Loading Products...";
 
 const q=query(
@@ -989,23 +996,27 @@ id:item.id,
 let selectedCategory="All";
 
 function renderProducts(){
-const search=$("productSearch").value
-.trim().toLowerCase();
+
+const searchBox=$("productSearch");
+const search=searchBox
+? searchBox.value.trim().toLowerCase()
+: "";
 
 const filtered=products.filter(p=>{
+
 const matchesSearch=
 (p.name||"").toLowerCase().includes(search);
 
 const matchesCategory=
 selectedCategory==="All" ||
-(p.category||"").toLowerCase()===
-selectedCategory.toLowerCase();
+(p.category||"").toLowerCase().includes(
+selectedCategory.toLowerCase()
+);
 
 return matchesSearch && matchesCategory;
 });
 
 list.innerHTML="";
-
 
 if(filtered.length===0){
 list.textContent="No matching products found.";
@@ -1013,6 +1024,7 @@ return;
 }
 
 filtered.forEach(p=>{
+
 const card=document.createElement("div");
 card.className="product-card";
 
@@ -1028,18 +1040,29 @@ price.textContent="₹"+p.price;
 
 const add=document.createElement("button");
 add.textContent="Add to Cart";
+
 add.onclick=()=>{
 alert(p.name+" selected!");
 };
 
 card.append(img,name,price,add);
 list.appendChild(card);
+
 });
+
 }
 
-$("productSearch").oninput=renderProducts;
+const searchBox=$("productSearch");
 
-$("searchProducts").onclick=renderProducts;
+if(searchBox){
+searchBox.oninput=renderProducts;
+}
+
+const searchButton=$("searchProducts");
+
+if(searchButton){
+searchButton.onclick=renderProducts;
+}
 
 document.querySelectorAll(".categoryBtn").forEach(btn=>{
 btn.onclick=()=>{
@@ -1051,9 +1074,18 @@ renderProducts();
 renderProducts();
 
 }catch(e){
-$("customerProductList").textContent="Error: "+e.message;
+
+console.error("Product Loading Error:",e);
+
+const list=$("customerProductList");
+
+if(list){
+list.textContent="Error: "+e.message;
+}
+
 }
 }
+  
   
 
   
