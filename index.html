@@ -1303,6 +1303,15 @@ message.textContent=e.message;
 showPage("authPage");
 }
 });
+  $("customerLogout").onclick=async()=>{
+try{
+await signOut(auth);
+showPage("loginPage");
+message.textContent="Logged out successfully.";
+}catch(e){
+message.textContent="Logout Error: "+e.message;
+}
+};
 </script>
 </body>
 </html>
