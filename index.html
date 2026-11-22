@@ -603,6 +603,46 @@ input, textarea, select {
     height: 115px;
   }
 }
+
+  
+/* FIXED BOTTOM NAVIGATION */
+
+.customer-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 520px;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 5px;
+  padding: 10px 8px;
+  background: white;
+  box-shadow: 0 -3px 15px rgba(0,0,0,0.12);
+  z-index: 9999;
+  border-radius: 16px 16px 0 0;
+}
+
+.customer-bottom-nav button {
+  width: 100%;
+  margin: 0;
+  padding: 10px 2px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.customer-bottom-nav small {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+  color: white;
+}
+
+#customerPage {
+  padding-bottom: 85px;
+}
+  
   
 </style>
 </head>
