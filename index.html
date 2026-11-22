@@ -224,6 +224,7 @@ getDocs,
 query,
 where,
 updateDoc,
+ deleteDoc,
 serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
@@ -606,7 +607,8 @@ $("adminMessage").textContent="Update failed: "+e.message;
 
 $("refreshVendors").onclick=loadAdminVendors;
 
- async function loadAddresses(uid){
+ 
+async function loadAddresses(uid){
 try{
 const list=$("addressList");
 list.textContent="Loading addresses...";
@@ -630,12 +632,56 @@ card.className="card";
 
 const details=document.createElement("p");
 details.textContent=
+(a.isDefault?"⭐ DEFAULT ADDRESS\n":"")+
 a.name+" | "+a.phone+"\n"+
 a.house+", "+a.street+", "+a.city+"\n"+
 a.post+", "+a.pin+", "+a.district+", "+a.state+
 " ("+a.type+")";
 
 card.appendChild(details);
+
+const edit=document.createElement("button");
+edit.textContent="Edit Address";
+edit.onclick=()=>{
+$("addressName").value=a.name;
+$("addressPhone").value=a.phone;
+$("addressHouse").value=a.house;
+$("addressStreet").value=a.street;
+$("addressCity").value=a.city;
+$("addressPost").value=a.post;
+$("addressPin").value=a.pin;
+$("addressDistrict").value=a.district;
+$("addressState").value=a.state;
+$("addressType").value=a.type;
+
+$("saveAddress").dataset.editId=item.id;
+$("addressForm").classList.remove("hidden");
+};
+
+const remove=document.createElement("button");
+remove.textContent="Delete Address";
+remove.onclick=async()=>{
+if(!confirm("Delete this address?"))return;
+
+await deleteDoc(
+doc(db,"users",uid,"addresses",item.id)
+);
+await loadAddresses(uid);
+};
+
+const makeDefault=document.createElement("button");
+makeDefault.textContent="Set Default Address";
+makeDefault.onclick=async()=>{
+await Promise.all(snapshot.docs.map(addressDoc=>
+updateDoc(
+doc(db,"users",uid,"addresses",addressDoc.id),
+{isDefault:addressDoc.id===item.id}
+)
+));
+await loadAddresses(uid);
+};
+
+card.append(edit,remove,makeDefault);
 list.appendChild(card);
 });
 
@@ -643,6 +689,7 @@ list.appendChild(card);
 $("addressList").textContent="Error: "+e.message;
 }
 }
+ 
 
 $("addAddress").onclick=()=>{
 $("addressForm").classList.remove("hidden");
