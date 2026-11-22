@@ -1644,6 +1644,31 @@ message.textContent="Logged out successfully.";
 message.textContent="Logout Error: "+e.message;
 }
 };
+$("openCartButton").onclick=async()=>{
+const uid=auth.currentUser?.uid;
+
+if(!uid){
+alert("Please login first");
+return;
+}
+
+const cartPage=$("customerCartPage");
+const productList=$("customerProductList");
+const btn=$("openCartButton");
+
+if(cartPage.classList.contains("hidden")){
+productList.classList.add("hidden");
+cartPage.classList.remove("hidden");
+btn.textContent="← Continue Shopping";
+await loadCart(uid);
+}else{
+cartPage.classList.add("hidden");
+productList.classList.remove("hidden");
+btn.textContent="🛒 My Cart";
+}
+};
+
+  
 </script>
 </body>
 </html>
