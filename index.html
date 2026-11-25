@@ -2814,6 +2814,8 @@ message.textContent=e.message;
 }
 };
 $("login").onclick=async()=>{
+message.textContent="LOGIN BUTTON WORKING";
+return;
 try{
 message.textContent="Logging in...";
 const result=await signInWithEmailAndPassword(
