@@ -2121,18 +2121,64 @@ async function loadMyProfile(){
   const user=auth.currentUser;
 
   if(!user){
-    $("profileName").textContent="Please login first.";
-    $("profilePhone").textContent="Please login first.";
-    $("profileEmail").textContent="Please login first.";
-    $("profileDOB").textContent="Not added";
     return;
   }
 
-  $("profileName").textContent=user.displayName||"Not available";
-  $("profilePhone").textContent=user.phoneNumber||"Not available";
+  const profileRef=doc(db,"users",user.uid);
+  const profileSnap=await getDoc(profileRef);
+  const data=profileSnap.exists()?profileSnap.data():{};
+
+  $("editProfileName").value=data.name||user.displayName||"";
+  $("editProfilePhone").value=data.phone||"";
+  $("editProfileDOB").value=data.dob||"";
   $("profileEmail").textContent=user.email||"Not available";
-  $("profileDOB").textContent="Not added";
 }
+
+
+// SAVE MY PROFILE
+window.saveMyProfile=async function(){
+  const user=auth.currentUser;
+  const msg=$("profileSaveMessage");
+  const button=$("saveProfileButton");
+
+  if(!user){
+    msg.textContent="Please login first.";
+    return;
+  }
+
+  const name=$("editProfileName").value.trim();
+  const phone=$("editProfilePhone").value.trim();
+  const dob=$("editProfileDOB").value;
+
+  if(!name){
+    msg.textContent="Please enter your name.";
+    return;
+  }
+
+  if(!phone){
+    msg.textContent="Please enter phone number.";
+    return;
+  }
+
+  try{
+    button.disabled=true;
+    msg.textContent="Saving...";
+
+    await setDoc(doc(db,"users",user.uid),{
+      name:name,
+      phone:phone,
+      dob:dob,
+      email:user.email||"",
+      updatedAt:serverTimestamp()
+    },{merge:true});
+
+    msg.textContent="✅ Profile saved successfully!";
+  }catch(e){
+    msg.textContent="Save Error: "+e.message;
+  }finally{
+    button.disabled=false;
+  }
+};
 
   
 async function loadVendorOrders(){
