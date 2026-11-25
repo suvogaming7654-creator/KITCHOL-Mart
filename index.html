@@ -2226,7 +2226,7 @@ function showPromoSlide(index) {
 function changePromoSlide(direction) {
   showPromoSlide(promoSlideIndex + direction);
 }
-
+window.changePromoSlide = changePromoSlide;
 setInterval(() => {
   if (document.getElementById("promoSlider")) {
     showPromoSlide(promoSlideIndex + 1);
