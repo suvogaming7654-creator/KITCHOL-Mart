@@ -1883,7 +1883,25 @@ $("cartItems").textContent="Cart Error: "+e.message;
         trackingTitle,
         tracking
       );
+if(o.status==="Pending"){
+  const cancelBtn=document.createElement("button");
+  cancelBtn.textContent="❌ Cancel Order";
 
+  cancelBtn.onclick=async()=>{
+    try{
+      await updateDoc(
+        doc(db,"orders",item.id),
+        {status:"Cancelled"}
+      );
+
+      await loadMyOrders(uid);
+    }catch(e){
+      console.error("Cancel Error:",e);
+    }
+  };
+
+  card.appendChild(cancelBtn);
+}
       list.appendChild(card);
     });
 
