@@ -1799,13 +1799,7 @@ $("cartItems").textContent="Cart Error: "+e.message;
     orders.forEach(item=>{
       const o=item.data();
 
-            if(o.status==="Cancelled"){
-        const cancelledCard=document.createElement("div");
-        cancelledCard.className="product-card";
-        cancelledCard.textContent="❌ Order Cancelled";
-        list.appendChild(cancelledCard);
-        return;
-            }
+      if(o.status==="Cancelled") return;
       
       const card=document.createElement("div");
       card.className="product-card";
