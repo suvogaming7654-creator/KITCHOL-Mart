@@ -1941,7 +1941,8 @@ $("checkoutButton").onclick=async()=>{
 
   await loadCheckoutAddress(auth.currentUser.uid);
 };
-  $("placeOrderButton").onclick=async()=>{
+  
+$("placeOrderButton").onclick=async()=>{
   try{
     const uid=auth.currentUser.uid;
 
@@ -1980,33 +1981,62 @@ $("checkoutButton").onclick=async()=>{
       return;
     }
 
-    let products=[];
-    let total=0;
+    const sellerOrders={};
 
-    cartSnapshot.forEach(item=>{
+    for(const item of cartSnapshot.docs){
       const p=item.data();
       const quantity=p.quantity||1;
       const price=Number(p.price)||0;
 
-      products.push({
+      let vendorId=p.vendorId;
+
+      if(!vendorId){
+        const productSnap=await getDoc(
+          doc(db,"products",item.id)
+        );
+
+        if(productSnap.exists()){
+          vendorId=productSnap.data().vendorId;
+        }
+      }
+
+      if(!vendorId){
+        alert("Seller information missing for "+(p.name||"product"));
+        return;
+      }
+
+      if(!sellerOrders[vendorId]){
+        sellerOrders[vendorId]={
+          products:[],
+          total:0
+        };
+      }
+
+      sellerOrders[vendorId].products.push({
         productId:item.id,
         name:p.name,
         price:price,
-        quantity:quantity
+        quantity:quantity,
+        vendorId:vendorId
       });
 
-      total+=price*quantity;
-    });
+      sellerOrders[vendorId].total+=price*quantity;
+    }
 
-    await addDoc(collection(db,"orders"),{
-      uid:uid,
-      products:products,
-      total:total,
-      address:selectedAddress,
-      paymentMethod:"COD",
-      status:"Pending",
-      createdAt:serverTimestamp()
-    });
+    for(const vendorId in sellerOrders){
+      const sellerOrder=sellerOrders[vendorId];
+
+      await addDoc(collection(db,"orders"),{
+        uid:uid,
+        vendorId:vendorId,
+        products:sellerOrder.products,
+        total:sellerOrder.total,
+        address:selectedAddress,
+        paymentMethod:"COD",
+        status:"Pending",
+        createdAt:serverTimestamp()
+      });
+    }
 
     for(const item of cartSnapshot.docs){
       await deleteDoc(item.ref);
@@ -2023,8 +2053,10 @@ $("checkoutButton").onclick=async()=>{
 
   }catch(e){
     alert("Order Error: "+e.message);
+    console.error(e);
   }
 };
+  
   
 async function loadCustomerProducts(){
 try{
