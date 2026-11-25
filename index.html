@@ -1754,8 +1754,145 @@ cartTotal.textContent="Total: ₹"+total;
 $("cartItems").textContent="Cart Error: "+e.message;
 }
 }
-  
+async function loadCheckoutAddress(uid){
+  const list=$("checkoutAddressList");
+  list.textContent="Loading Address...";
 
+  try{
+    const snapshot=await getDocs(
+      collection(db,"users",uid,"addresses")
+    );
+
+    list.innerHTML="";
+
+    if(snapshot.empty){
+      list.textContent="No saved address. Please add an address.";
+      return;
+    }
+
+    snapshot.forEach(item=>{
+      const a=item.data();
+
+      const card=document.createElement("div");
+      card.className="product-card";
+
+      const radio=document.createElement("input");
+      radio.type="radio";
+      radio.name="selectedAddress";
+      radio.value=item.id;
+
+      const details=document.createElement("div");
+      details.textContent=
+        (a.name||"")+"\n"+
+        (a.phone||"")+"\n"+
+        (a.address||"")+"\n"+
+        (a.city||"")+"\n"+
+        (a.pincode||"");
+
+      card.append(radio,details);
+      list.appendChild(card);
+    });
+
+  }catch(e){
+    list.textContent="Address Error: "+e.message;
+  }
+}  
+$("checkoutButton").onclick=async()=>{
+  if(!auth.currentUser){
+    alert("Please login first.");
+    return;
+  }
+
+  $("customerCartPage").classList.add("hidden");
+  $("checkoutPage").classList.remove("hidden");
+
+  await loadCheckoutAddress(auth.currentUser.uid);
+};
+  $("placeOrderButton").onclick=async()=>{
+  try{
+    const uid=auth.currentUser.uid;
+
+    const selected=document.querySelector(
+      'input[name="selectedAddress"]:checked'
+    );
+
+    if(!selected){
+      alert("Please select a delivery address.");
+      return;
+    }
+
+    const addressSnapshot=await getDocs(
+      collection(db,"users",uid,"addresses")
+    );
+
+    let selectedAddress=null;
+
+    addressSnapshot.forEach(item=>{
+      if(item.id===selected.value){
+        selectedAddress=item.data();
+      }
+    });
+
+    if(!selectedAddress){
+      alert("Address not found.");
+      return;
+    }
+
+    const cartSnapshot=await getDocs(
+      collection(db,"users",uid,"cart")
+    );
+
+    if(cartSnapshot.empty){
+      alert("Your cart is empty.");
+      return;
+    }
+
+    let products=[];
+    let total=0;
+
+    cartSnapshot.forEach(item=>{
+      const p=item.data();
+      const quantity=p.quantity||1;
+      const price=Number(p.price)||0;
+
+      products.push({
+        productId:item.id,
+        name:p.name,
+        price:price,
+        quantity:quantity
+      });
+
+      total+=price*quantity;
+    });
+
+    await addDoc(collection(db,"orders"),{
+      uid:uid,
+      products:products,
+      total:total,
+      address:selectedAddress,
+      paymentMethod:"COD",
+      status:"Pending",
+      createdAt:serverTimestamp()
+    });
+
+    for(const item of cartSnapshot.docs){
+      await deleteDoc(item.ref);
+    }
+
+    alert("Order placed successfully!");
+
+    $("checkoutPage").classList.add("hidden");
+    $("customerProductList").classList.remove("hidden");
+
+    await loadCart(uid);
+
+    window.scrollTo(0,0);
+
+  }catch(e){
+    alert("Order Error: "+e.message);
+  }
+};
+  
 async function loadCustomerProducts(){
 try{
 
