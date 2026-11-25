@@ -759,34 +759,50 @@ input, textarea, select {
 }
 
   
-/* KITCHOL Category Image Design */
-.premium-categories button {
+
+/* KITCHOL Category Fix */
+#customerPage .premium-categories {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  overflow-x: auto;
+  align-items: center;
+  padding: 12px 0;
+}
+
+#customerPage .premium-categories button {
+  flex: 0 0 82px;
+  width: 82px;
   min-width: 82px;
+  height: 105px;
   min-height: 105px;
-  padding: 8px 5px;
-  background: #ffffff;
-  border: 1px solid #e5eee7;
-  border-radius: 16px;
+  padding: 7px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 7px;
+  background: white;
+  border-radius: 15px;
 }
 
-.premium-categories button img {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
+#customerPage .premium-categories button img {
+  width: 68px !important;
+  height: 68px !important;
+  min-width: 68px;
+  max-width: 68px;
   object-fit: cover;
-  border: 2px solid #e5f3e7;
+  border-radius: 50%;
+  border: 2px solid #087d32;
+  flex-shrink: 0;
 }
 
-.premium-categories button small {
-  color: #087d32;
+#customerPage .premium-categories button small {
   font-size: 11px;
   font-weight: bold;
+  color: #087d32;
 }
+  
   
   
 </style>
