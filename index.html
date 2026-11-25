@@ -1985,7 +1985,7 @@ async function loadVendorOrders(){
     console.error(e);
   }
 }
-  
+  window.loadVendorOrders=loadVendorOrders;
   
 async function loadCheckoutAddress(uid){
   const list=$("checkoutAddressList");
