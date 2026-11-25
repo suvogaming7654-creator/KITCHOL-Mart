@@ -1098,6 +1098,34 @@ input, textarea, select {
   <h3 id="cartTotal">Total: ₹0</h3>
   <button id="checkoutButton">Proceed to Checkout</button>
 </div>
+  <div id="checkoutPage" class="hidden">
+  <h2>📦 Checkout</h2>
+
+  <h3>📍 Delivery Address</h3>
+  <div id="checkoutAddressList">
+    Loading Address...
+  </div>
+
+  <h3>💳 Payment Method</h3>
+  <div class="payment-option">
+    <label>
+      <input type="radio" name="paymentMethod" value="COD" checked>
+      Cash on Delivery (COD)
+    </label>
+  </div>
+
+  <h3>🛒 Order Summary</h3>
+  <div id="checkoutSummary"></div>
+  <h3 id="checkoutTotal">Total: ₹0</h3>
+
+  <button id="placeOrderButton" type="button">
+    Place Order
+  </button>
+
+  <button type="button" onclick="showCustomerSection('cart')">
+    ← Back to Cart
+  </button>
+  </div>
   
   
   
