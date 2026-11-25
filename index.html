@@ -2336,13 +2336,17 @@ $("adminLogout").onclick=()=>signOut(auth);
 
 onAuthStateChanged(auth,async user=>{
 if(user){
-try{await openUserPage(user);}
-catch(e){
+try{
+message.textContent="Login successful. Loading...";
+await openUserPage(user);
+}catch(e){
 showPage("authPage");
-message.textContent=e.message;
+message.textContent="Error: "+e.message;
+console.error("Login error:",e);
 }
 }else{
 showPage("authPage");
+message.textContent="Please login.";
 }
 });
   $("customerLogout").onclick=async()=>{
