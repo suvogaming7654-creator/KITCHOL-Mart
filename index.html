@@ -1393,16 +1393,23 @@ input, textarea, select {
   <div class="profile-details-card">
 
     <label>Full Name</label>
-    <p id="profileName">Loading...</p>
+    <input id="editProfileName" type="text" placeholder="Enter full name">
 
     <label>Phone Number</label>
-    <p id="profilePhone">Loading...</p>
+    <input id="editProfilePhone" type="tel" placeholder="Enter phone number">
 
     <label>Email</label>
     <p id="profileEmail">Loading...</p>
 
     <label>Date of Birth</label>
-    <p id="profileDOB">Not added</p>
+    <input id="editProfileDOB" type="date">
+
+    <button id="saveProfileButton" type="button"
+      onclick="saveMyProfile()">
+      💾 Save Profile
+    </button>
+
+    <p id="profileSaveMessage"></p>
 
   </div>
 
