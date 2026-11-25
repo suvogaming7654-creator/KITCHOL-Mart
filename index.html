@@ -1964,8 +1964,6 @@ async function loadVendorOrders(){
               {status:"Confirmed"}
             );
 
-            alert("Order Accepted!");
-
             await loadVendorOrders();
 
           }catch(e){
@@ -2675,7 +2673,10 @@ setInterval(() => {
   }
 }, 4000);
   
-  
+window.alert = function(message){
+  console.log(message);
+};
+
 </script>
 </body>
 </html>
