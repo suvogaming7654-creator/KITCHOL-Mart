@@ -1133,7 +1133,30 @@ input, textarea, select {
     Loading Orders...
   </div>
   </div>
-  
+
+  <div id="customerAccountPage" class="hidden">
+  <h2>👤 My Account</h2>
+
+  <button onclick="showCustomerSection('orders')">
+    📦 My Orders
+  </button>
+
+  <button onclick="showCustomerSection('addresses')">
+    📍 My Addresses
+  </button>
+
+  <button onclick="showCustomerSection('details')">
+    👤 My Profile
+  </button>
+
+  <button onclick="showCustomerSection('support')">
+    💬 Help & Support
+  </button>
+
+  <button onclick="logoutUser()">
+    🚪 Logout
+  </button>
+  </div>
   
 
   <div class="premium-address">
@@ -2639,13 +2662,18 @@ await loadCart(auth.currentUser.uid);
 window.scrollTo(0,0);
 }
 
-if(section==="profile"){
+  if(section==="profile"){
 cart.classList.add("hidden");
-products.classList.remove("hidden");
+products.classList.add("hidden");
+$("checkoutPage").classList.add("hidden");
+$("customerOrdersPage").classList.add("hidden");
+
+$("customerAccountPage").classList.remove("hidden");
+
 cartButton.textContent="🛒 My Cart";
-document.querySelector(".premium-address")
-.scrollIntoView({behavior:"smooth"});
-}
+window.scrollTo(0,0);
+  }
+
 if(section==="orders"){
 cart.classList.add("hidden");
 products.classList.add("hidden");
