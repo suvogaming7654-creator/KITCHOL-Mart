@@ -884,15 +884,50 @@ input, textarea, select {
   
 
   
-<div class="premium-banner">
-  <div class="banner-content">
-    <small>FRESH & HEALTHY</small>
-    <h2>Fresh Vegetables<br>Every Day!</h2>
-    <p>Farm Fresh Products at Best Prices</p>
-    <strong>SHOP NOW →</strong>
+
+<div class="premium-banner" id="promoSlider">
+
+  <div class="banner-slide active">
+    <div class="banner-content">
+      <small>FRESH & HEALTHY</small>
+      <h2>Fresh Vegetables<br>Every Day!</h2>
+      <p>Farm Fresh Products at Best Prices</p>
+      <strong>SHOP NOW →</strong>
+    </div>
+    <div class="banner-emoji">🥦🥕🍅</div>
   </div>
-  <div class="banner-emoji">🥦🥕🍅</div>
+
+  <div class="banner-slide">
+    <div class="banner-content">
+      <small>NATURE'S SWEETNESS</small>
+      <h2>Fresh Fruits<br>Every Day!</h2>
+      <p>Fresh Fruits at Best Prices</p>
+      <strong>SHOP NOW →</strong>
+    </div>
+    <div class="banner-emoji">🍎🍇🍊</div>
+  </div>
+
+  <div class="banner-slide">
+    <div class="banner-content">
+      <small>SMART SHOPPING</small>
+      <h2>Grocery & Kitchen<br>Essentials!</h2>
+      <p>Quality Products at Best Prices</p>
+      <strong>SHOP NOW →</strong>
+    </div>
+    <div class="banner-emoji">🛒🍚🍳</div>
+  </div>
+
+  <button type="button" class="slider-prev" onclick="changePromoSlide(-1)">❮</button>
+  <button type="button" class="slider-next" onclick="changePromoSlide(1)">❯</button>
+
+  <div class="slider-dots">
+    <span class="active"></span>
+    <span></span>
+    <span></span>
+  </div>
+
 </div>
+  
   
 
   <h3 class="section-heading">Shop By Category</h3>
