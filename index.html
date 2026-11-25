@@ -2953,12 +2953,20 @@ cartButton.textContent="🛒 My Cart";
 window.scrollTo(0,0);
 }
 
-  // MY PROFILE DETAILS
+ // MY PROFILE DETAILS
 if(section==="details"){
-homeElements.forEach(el=>el.classList.add("hidden"));
-cart.classList.add("hidden");
-cartButton.textContent="🛒 My Cart";
-window.scrollTo(0,0);
+  homeElements.forEach(el=>el.classList.add("hidden"));
+  cart.classList.add("hidden");
+
+  $("customerDetailsPage").classList.remove("hidden");
+
+  cartButton.textContent="🛒 My Cart";
+
+  if(auth.currentUser){
+    await loadMyProfile();
+  }
+
+  window.scrollTo(0,0);
 }
   
 // ORDERS
