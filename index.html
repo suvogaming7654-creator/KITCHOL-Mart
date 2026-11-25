@@ -1760,6 +1760,59 @@ cartTotal.textContent="Total: ₹"+total;
 $("cartItems").textContent="Cart Error: "+e.message;
 }
 }
+
+  async function loadMyOrders(uid){
+  const list=$("myOrdersList");
+  list.textContent="Loading Orders...";
+
+  try{
+    const orderQuery=query(
+      collection(db,"orders"),
+      where("uid","==",uid)
+    );
+
+    const snapshot=await getDocs(orderQuery);
+
+    list.innerHTML="";
+
+    if(snapshot.empty){
+      list.textContent="You have no orders yet.";
+      return;
+    }
+
+    const orders=snapshot.docs.slice().reverse();
+
+    orders.forEach(item=>{
+      const o=item.data();
+
+      const card=document.createElement("div");
+      card.className="product-card";
+
+      const title=document.createElement("h3");
+      title.textContent="📦 Order";
+
+      const status=document.createElement("p");
+      status.textContent="Status: "+(o.status||"Pending");
+
+      const total=document.createElement("p");
+      total.textContent="Total: ₹"+o.total;
+
+      const payment=document.createElement("p");
+      payment.textContent="Payment: "+(o.paymentMethod||"COD");
+
+      const tracking=document.createElement("p");
+      tracking.textContent=
+        "Order Tracking: "+(o.status||"Pending");
+
+      card.append(title,total,payment,status,tracking);
+      list.appendChild(card);
+    });
+
+  }catch(e){
+    list.textContent="Orders Error: "+e.message;
+  }
+  }
+  
 async function loadCheckoutAddress(uid){
   const list=$("checkoutAddressList");
   list.textContent="Loading Address...";
@@ -2367,12 +2420,19 @@ document.querySelector(".premium-address")
 }
 if(section==="orders"){
 cart.classList.add("hidden");
-products.classList.remove("hidden");
+products.classList.add("hidden");
+
+$("checkoutPage").classList.add("hidden");
+$("customerOrdersPage").classList.remove("hidden");
+
 cartButton.textContent="🛒 My Cart";
-alert("Your Orders section will be available soon!");
+
+if(auth.currentUser){
+await loadMyOrders(auth.currentUser.uid);
+}
+
 window.scrollTo(0,0);
 }
-};
  
 let promoSlideIndex = 0;
 
