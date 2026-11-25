@@ -2920,7 +2920,38 @@ document.querySelector(".premium-categories")
 }else{
 window.scrollTo(0,0);
 }
-}
+window.showCustomerSection=async function(section){
+
+const products=$("customerProductList");
+const cart=$("customerCartPage");
+const cartButton=$("openCartButton");
+
+const homeElements=document.querySelectorAll(
+".premium-header, .shop-search, #promoSlider, .section-heading, .premium-categories, .product-heading, #openCartButton, #customerProductList, .fresh-guarantee"
+);
+
+const checkout=$("checkoutPage");
+const orders=$("customerOrdersPage");
+const account=$("customerAccountPage");
+const addresses=$("customerAddressesPage");
+const details=$("customerDetailsPage");
+
+// HIDE ALL PAGES
+cart.classList.add("hidden");
+products.classList.add("hidden");
+checkout.classList.add("hidden");
+orders.classList.add("hidden");
+account.classList.add("hidden");
+addresses.classList.add("hidden");
+details.classList.add("hidden");
+
+// HOME
+if(section==="home" || section==="categories"){
+
+homeElements.forEach(el=>el.classList.remove("hidden"));
+products.classList.remove("hidden");
+
+cartButton.textContent="🛒 My Cart";
 
 if(section==="categories"){
 document.querySelector(".premium-categories")
@@ -2928,10 +2959,12 @@ document.querySelector(".premium-categories")
 }else{
 window.scrollTo(0,0);
 }
+
 }
 
 // CART
 if(section==="cart"){
+
 cart.classList.remove("hidden");
 cartButton.textContent="← Continue Shopping";
 
@@ -2942,10 +2975,12 @@ await loadCart(auth.currentUser.uid);
 window.scrollTo(0,0);
 }
 
-// MY PROFILE PAGE
+// MY PROFILE
 if(section==="details"){
+
 homeElements.forEach(el=>el.classList.add("hidden"));
 details.classList.remove("hidden");
+
 cartButton.textContent="🛒 My Cart";
 
 if(auth.currentUser){
@@ -2954,43 +2989,33 @@ await loadMyProfile();
 
 window.scrollTo(0,0);
 }
-  
+
 // ACCOUNT
 if(section==="profile"){
+
 homeElements.forEach(el=>el.classList.add("hidden"));
 account.classList.remove("hidden");
+
 cartButton.textContent="🛒 My Cart";
 window.scrollTo(0,0);
 }
 
 // ADDRESSES
 if(section==="addresses"){
+
 homeElements.forEach(el=>el.classList.add("hidden"));
 addresses.classList.remove("hidden");
+
 cartButton.textContent="🛒 My Cart";
 window.scrollTo(0,0);
 }
 
- // MY PROFILE DETAILS
-if(section==="details"){
-  homeElements.forEach(el=>el.classList.add("hidden"));
-  cart.classList.add("hidden");
-
-  $("customerDetailsPage").classList.remove("hidden");
-
-  cartButton.textContent="🛒 My Cart";
-
-  if(auth.currentUser){
-    await loadMyProfile();
-  }
-
-  window.scrollTo(0,0);
-}
-  
 // ORDERS
 if(section==="orders"){
+
 homeElements.forEach(el=>el.classList.add("hidden"));
 orders.classList.remove("hidden");
+
 cartButton.textContent="🛒 My Cart";
 
 if(auth.currentUser){
@@ -3000,7 +3025,7 @@ await loadMyOrders(auth.currentUser.uid);
 window.scrollTo(0,0);
 }
 
-};  
+};
 
 let promoSlideIndex = 0;
 
