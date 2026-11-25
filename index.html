@@ -2847,6 +2847,14 @@ cartButton.textContent="🛒 My Cart";
 window.scrollTo(0,0);
 }
 
+  // MY PROFILE DETAILS
+if(section==="details"){
+homeElements.forEach(el=>el.classList.add("hidden"));
+cart.classList.add("hidden");
+cartButton.textContent="🛒 My Cart";
+window.scrollTo(0,0);
+}
+  
 // ORDERS
 if(section==="orders"){
 homeElements.forEach(el=>el.classList.add("hidden"));
