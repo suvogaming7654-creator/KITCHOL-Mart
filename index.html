@@ -2202,6 +2202,36 @@ alert("Your Orders section will be available soon!");
 window.scrollTo(0,0);
 }
 };
+ 
+let promoSlideIndex = 0;
+
+function showPromoSlide(index) {
+  const slider = document.getElementById("promoSlider");
+  if (!slider) return;
+
+  const slides = slider.querySelectorAll(".banner-slide");
+  const dots = slider.querySelectorAll(".slider-dots span");
+
+  promoSlideIndex = (index + slides.length) % slides.length;
+
+  slides.forEach((slide, i) => {
+    slide.classList.toggle("active", i === promoSlideIndex);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === promoSlideIndex);
+  });
+}
+
+function changePromoSlide(direction) {
+  showPromoSlide(promoSlideIndex + direction);
+}
+
+setInterval(() => {
+  if (document.getElementById("promoSlider")) {
+    showPromoSlide(promoSlideIndex + 1);
+  }
+}, 4000);
   
   
 </script>
