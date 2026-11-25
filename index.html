@@ -2900,9 +2900,27 @@ addresses.classList.add("hidden");
 
 // HOME
 if(section==="home" || section==="categories"){
+
 homeElements.forEach(el=>el.classList.remove("hidden"));
+
+$("customerDetailsPage").classList.add("hidden");
+$("customerAccountPage").classList.add("hidden");
+$("customerAddressesPage").classList.add("hidden");
+$("customerOrdersPage").classList.add("hidden");
+$("checkoutPage").classList.add("hidden");
+
 products.classList.remove("hidden");
+cart.classList.add("hidden");
+
 cartButton.textContent="🛒 My Cart";
+
+if(section==="categories"){
+document.querySelector(".premium-categories")
+.scrollIntoView({behavior:"smooth"});
+}else{
+window.scrollTo(0,0);
+}
+}
 
 if(section==="categories"){
 document.querySelector(".premium-categories")
