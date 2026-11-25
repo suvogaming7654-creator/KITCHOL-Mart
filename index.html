@@ -1129,38 +1129,17 @@ input, textarea, select {
   </button>
   </div>
 
-  <div id="customerOrdersPage" class="hidden">
+  <!-- MY ORDERS PAGE -->
+<div id="customerOrdersPage" class="hidden">
   <h2>📦 My Orders</h2>
+
   <div id="myOrdersList">
     Loading Orders...
   </div>
-  </div>
+</div>
 
-  <div id="customerAccountPage" class="hidden">
-  <h2>👤 My Account</h2>
-
-  <button onclick="showCustomerSection('orders')">
-    📦 My Orders
-  </button>
-
-  <button onclick="showCustomerSection('addresses')">
-    📍 My Addresses
-  </button>
-
-  <button onclick="showCustomerSection('details')">
-    👤 My Profile
-  </button>
-
-  <button onclick="showCustomerSection('support')">
-    💬 Help & Support
-  </button>
-
-  <button onclick="logoutUser()">
-    🚪 Logout
-  </button>
-  </div>
-  
-
+<!-- MY ADDRESSES PAGE -->
+<div id="customerAddressesPage" class="hidden">
   <div class="premium-address">
     <h3>📍 My Delivery Addresses</h3>
     <p>Manage your delivery locations</p>
@@ -1230,11 +1209,45 @@ input, textarea, select {
         <option value="Office">Office</option>
       </select>
 
-      <button id="saveAddress" type="button">Save Address</button>
-      <button id="cancelAddress" type="button">Cancel</button>
+      <button id="saveAddress" type="button">
+        Save Address
+      </button>
+
+      <button id="cancelAddress" type="button">
+        Cancel
+      </button>
+
       <p id="addressMessage"></p>
     </div>
   </div>
+</div>
+
+<!-- MY ACCOUNT PAGE -->
+<div id="customerAccountPage" class="hidden">
+  <h2>👤 My Account</h2>
+
+  <button onclick="showCustomerSection('orders')">
+    📦 My Orders
+  </button>
+
+  <button onclick="showCustomerSection('addresses')">
+    📍 My Addresses
+  </button>
+
+  <button onclick="showCustomerSection('details')">
+    👤 My Profile
+  </button>
+
+  <button onclick="showCustomerSection('support')">
+    💬 Help & Support
+  </button>
+
+  <button onclick="logoutUser()">
+    🚪 Logout
+  </button>
+</div>
+
+  
 
   
 <div class="customer-bottom-nav">
