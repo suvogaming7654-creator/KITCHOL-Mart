@@ -2111,26 +2111,20 @@ if(o.status==="Pending"){
 
   // LOAD MY PROFILE DETAILS
 async function loadMyProfile(){
-  const content=$("profileDetailsContent");
   const user=auth.currentUser;
 
   if(!user){
-    content.textContent="Please login first.";
+    $("profileName").textContent="Please login first.";
+    $("profilePhone").textContent="Please login first.";
+    $("profileEmail").textContent="Please login first.";
+    $("profileDOB").textContent="Not added";
     return;
   }
 
-  content.innerHTML="";
-
-  const name=document.createElement("p");
-  name.textContent="Name: "+(user.displayName||"Not available");
-
-  const email=document.createElement("p");
-  email.textContent="Email: "+(user.email||"Not available");
-
-  const phone=document.createElement("p");
-  phone.textContent="Phone: "+(user.phoneNumber||"Not available");
-
-  content.append(name,email,phone);
+  $("profileName").textContent=user.displayName||"Not available";
+  $("profilePhone").textContent=user.phoneNumber||"Not available";
+  $("profileEmail").textContent=user.email||"Not available";
+  $("profileDOB").textContent="Not added";
 }
 
   
