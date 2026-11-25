@@ -2814,15 +2814,20 @@ message.textContent=e.message;
 }
 };
 $("login").onclick=async()=>{
-message.textContent="LOGIN BUTTON WORKING";
-return;
-try{
-message.textContent="Logging in...";
-const result=await signInWithEmailAndPassword(
-auth,$("lEmail").value.trim(),$("lPass").value
-);
-await openUserPage(result.user);
-}catch(e){message.textContent=e.message;}
+  try{
+    message.textContent="Logging in...";
+
+    const result=await signInWithEmailAndPassword(
+      auth,
+      $("lEmail").value.trim(),
+      $("lPass").value
+    );
+
+    await openUserPage(result.user);
+
+  }catch(e){
+    message.textContent=e.message;
+  }
 };
 
 $("customerLogout").onclick=()=>signOut(auth);
