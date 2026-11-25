@@ -2094,6 +2094,30 @@ if(o.status==="Pending"){
   }
   }
 
+  // LOAD MY PROFILE DETAILS
+async function loadMyProfile(){
+  const content=$("profileDetailsContent");
+  const user=auth.currentUser;
+
+  if(!user){
+    content.textContent="Please login first.";
+    return;
+  }
+
+  content.innerHTML="";
+
+  const name=document.createElement("p");
+  name.textContent="Name: "+(user.displayName||"Not available");
+
+  const email=document.createElement("p");
+  email.textContent="Email: "+(user.email||"Not available");
+
+  const phone=document.createElement("p");
+  phone.textContent="Phone: "+(user.phoneNumber||"Not available");
+
+  content.append(name,email,phone);
+}
+
   
 async function loadVendorOrders(){
   const list=$("vendorOrdersList");
@@ -2838,6 +2862,19 @@ await loadCart(auth.currentUser.uid);
 window.scrollTo(0,0);
 }
 
+// MY PROFILE PAGE
+if(section==="details"){
+homeElements.forEach(el=>el.classList.add("hidden"));
+details.classList.remove("hidden");
+cartButton.textContent="🛒 My Cart";
+
+if(auth.currentUser){
+await loadMyProfile();
+}
+
+window.scrollTo(0,0);
+}
+  
 // ACCOUNT
 if(section==="profile"){
 homeElements.forEach(el=>el.classList.add("hidden"));
