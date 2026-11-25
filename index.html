@@ -2644,62 +2644,75 @@ btn.textContent="🛒 My Cart";
 }
 };
 
-  
 window.showCustomerSection=async function(section){
 
 const products=$("customerProductList");
 const cart=$("customerCartPage");
 const cartButton=$("openCartButton");
 
-if(section==="home"){
+const homeElements=document.querySelectorAll(
+".premium-header, .shop-search, #promoSlider, .section-heading, .premium-categories, .product-heading, #openCartButton, #customerProductList, .fresh-guarantee"
+);
+
+const checkout=$("checkoutPage");
+const orders=$("customerOrdersPage");
+const account=$("customerAccountPage");
+const addresses=$("customerAddressesPage");
+
+// Hide other pages
 cart.classList.add("hidden");
+products.classList.add("hidden");
+checkout.classList.add("hidden");
+orders.classList.add("hidden");
+account.classList.add("hidden");
+addresses.classList.add("hidden");
+
+// HOME
+if(section==="home" || section==="categories"){
+homeElements.forEach(el=>el.classList.remove("hidden"));
 products.classList.remove("hidden");
 cartButton.textContent="🛒 My Cart";
-window.scrollTo(0,0);
-}
 
 if(section==="categories"){
-cart.classList.add("hidden");
-products.classList.remove("hidden");
-cartButton.textContent="🛒 My Cart";
 document.querySelector(".premium-categories")
 .scrollIntoView({behavior:"smooth"});
+}else{
+window.scrollTo(0,0);
+}
 }
 
+// CART
 if(section==="cart"){
-products.classList.add("hidden");
 cart.classList.remove("hidden");
 cartButton.textContent="← Continue Shopping";
 
 if(auth.currentUser){
 await loadCart(auth.currentUser.uid);
 }
+
 window.scrollTo(0,0);
 }
 
-  if(section==="profile"){
-cart.classList.add("hidden");
-products.classList.add("hidden");
-$("checkoutPage").classList.add("hidden");
-$("customerOrdersPage").classList.add("hidden");
-
-document.querySelectorAll(
-".premium-header, .shop-search, #promoSlider, .section-heading, .premium-categories, .product-heading, #openCartButton, #customerProductList, .fresh-guarantee"
-).forEach(el=>el.classList.add("hidden"));
-
-$("customerAccountPage").classList.remove("hidden");
-
+// ACCOUNT
+if(section==="profile"){
+homeElements.forEach(el=>el.classList.add("hidden"));
+account.classList.remove("hidden");
 cartButton.textContent="🛒 My Cart";
 window.scrollTo(0,0);
-  }
+}
 
+// ADDRESSES
+if(section==="addresses"){
+homeElements.forEach(el=>el.classList.add("hidden"));
+addresses.classList.remove("hidden");
+cartButton.textContent="🛒 My Cart";
+window.scrollTo(0,0);
+}
+
+// ORDERS
 if(section==="orders"){
-cart.classList.add("hidden");
-products.classList.add("hidden");
-
-$("checkoutPage").classList.add("hidden");
-$("customerOrdersPage").classList.remove("hidden");
-
+homeElements.forEach(el=>el.classList.add("hidden"));
+orders.classList.remove("hidden");
 cartButton.textContent="🛒 My Cart";
 
 if(auth.currentUser){
@@ -2708,7 +2721,8 @@ await loadMyOrders(auth.currentUser.uid);
 
 window.scrollTo(0,0);
 }
-};
+
+};  
 
 let promoSlideIndex = 0;
 
