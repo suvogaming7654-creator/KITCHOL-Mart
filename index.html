@@ -1782,6 +1782,15 @@ $("cartItems").textContent="Cart Error: "+e.message;
 
     const orders=snapshot.docs.slice().reverse();
 
+    const steps=[
+      "Pending",
+      "Confirmed",
+      "Processing",
+      "Shipped",
+      "Out for Delivery",
+      "Delivered"
+    ];
+
     orders.forEach(item=>{
       const o=item.data();
 
@@ -1789,22 +1798,87 @@ $("cartItems").textContent="Cart Error: "+e.message;
       card.className="product-card";
 
       const title=document.createElement("h3");
-      title.textContent="📦 Order";
+      title.textContent="📦 Order Details";
 
-      const status=document.createElement("p");
+      const orderId=document.createElement("p");
+      orderId.textContent="Order ID: "+item.id;
+
+      const status=document.createElement("h3");
       status.textContent="Status: "+(o.status||"Pending");
 
-      const total=document.createElement("p");
+      const total=document.createElement("h3");
       total.textContent="Total: ₹"+o.total;
 
       const payment=document.createElement("p");
       payment.textContent="Payment: "+(o.paymentMethod||"COD");
 
-      const tracking=document.createElement("p");
-      tracking.textContent=
-        "Order Tracking: "+(o.status||"Pending");
+      const productTitle=document.createElement("h4");
+      productTitle.textContent="Products:";
 
-      card.append(title,total,payment,status,tracking);
+      const productList=document.createElement("div");
+
+      (o.products||[]).forEach(p=>{
+        const row=document.createElement("p");
+        row.textContent=
+          (p.name||"Product")+
+          " | ₹"+p.price+
+          " | Qty: "+p.quantity;
+        productList.appendChild(row);
+      });
+
+      const addressTitle=document.createElement("h4");
+      addressTitle.textContent="📍 Delivery Address";
+
+      const address=document.createElement("p");
+      const a=o.address||{};
+
+      address.textContent=
+        (a.name||"")+"\n"+
+        (a.phone||"")+"\n"+
+        (a.address||"")+"\n"+
+        (a.city||"")+"\n"+
+        (a.pincode||"");
+
+      const trackingTitle=document.createElement("h3");
+      trackingTitle.textContent="🚚 Order Tracking";
+
+      const tracking=document.createElement("div");
+
+      const currentStatus=o.status||"Pending";
+      const currentIndex=steps.indexOf(currentStatus);
+
+      steps.forEach((step,index)=>{
+        const line=document.createElement("p");
+
+        if(index<=currentIndex){
+          line.textContent="✅ "+step;
+        }else{
+          line.textContent="○ "+step;
+        }
+
+        tracking.appendChild(line);
+      });
+
+      if(currentStatus==="Cancelled"){
+        const cancelled=document.createElement("p");
+        cancelled.textContent="❌ Order Cancelled";
+        tracking.appendChild(cancelled);
+      }
+
+      card.append(
+        title,
+        orderId,
+        productTitle,
+        productList,
+        total,
+        payment,
+        addressTitle,
+        address,
+        status,
+        trackingTitle,
+        tracking
+      );
+
       list.appendChild(card);
     });
 
