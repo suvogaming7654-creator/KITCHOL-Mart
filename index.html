@@ -802,6 +802,103 @@ input, textarea, select {
   font-weight: bold;
   color: #087d32;
 }
+ 
+/* KITCHOL Promo Slider */
+#promoSlider {
+  position: relative;
+  min-height: 190px;
+  height: 190px;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 0;
+  background: linear-gradient(120deg,#087d32,#55bd64);
+}
+
+#promoSlider .banner-slide {
+  display: none;
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  padding: 22px 38px 35px 18px;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+#promoSlider .banner-slide.active {
+  display: flex;
+}
+
+#promoSlider .banner-content {
+  max-width: 72%;
+}
+
+#promoSlider .banner-content small {
+  font-size: 11px;
+  font-weight: bold;
+  color: #eaffdf;
+}
+
+#promoSlider .banner-content h2 {
+  font-size: 23px;
+  margin: 9px 0;
+  color: white;
+}
+
+#promoSlider .banner-content p {
+  font-size: 12px;
+  margin: 5px 0;
+}
+
+#promoSlider .banner-content strong {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #fff;
+}
+
+#promoSlider .banner-emoji {
+  font-size: 35px;
+}
+
+#promoSlider .slider-prev,
+#promoSlider .slider-next {
+  position: absolute;
+  top: 45%;
+  width: 28px;
+  height: 32px;
+  padding: 0;
+  background: #ffffffdd;
+  color: #087d32;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+#promoSlider .slider-prev { left: 5px; }
+#promoSlider .slider-next { right: 5px; }
+
+#promoSlider .slider-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+#promoSlider .slider-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff88;
+}
+
+#promoSlider .slider-dots span.active {
+  width: 20px;
+  border-radius: 8px;
+  background: white;
+}
   
   
   
