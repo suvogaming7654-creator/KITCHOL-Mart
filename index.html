@@ -903,7 +903,108 @@ input, textarea, select {
   .hidden {
   display: none !important;
   }
-  
+  /* PREMIUM ACCOUNT DESIGN */
+
+.account-premium-header{
+  background:linear-gradient(135deg,#14532d,#16a34a);
+  color:white;
+  padding:25px 20px;
+  border-radius:20px;
+  text-align:center;
+  margin:15px 0;
+}
+
+.account-avatar{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:35px;
+  margin:0 auto 10px;
+}
+
+.account-premium-header h2{
+  margin:8px 0;
+  color:white;
+}
+
+.account-premium-header p{
+  margin:0;
+  color:#dcfce7;
+}
+
+.account-premium-menu{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin:15px 0;
+}
+
+.account-premium-item{
+  display:flex;
+  align-items:center;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  background:white;
+  box-shadow:0 3px 12px rgba(0,0,0,0.07);
+  text-align:left;
+  cursor:pointer;
+  gap:14px;
+}
+
+.account-premium-icon{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:#f0fdf4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  flex-shrink:0;
+}
+
+.account-premium-text{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  flex:1;
+}
+
+.account-premium-text strong{
+  font-size:16px;
+  color:#222;
+}
+
+.account-premium-text small{
+  font-size:12px;
+  color:#777;
+}
+
+.account-premium-arrow{
+  font-size:25px;
+  color:#888;
+}
+
+.account-premium-logout{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:16px;
+  background:#fff1f2;
+  color:#dc2626;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  }
 </style>
 </head>
 <body>
@@ -1222,29 +1323,66 @@ input, textarea, select {
   </div>
 </div>
 
-<!-- MY ACCOUNT PAGE -->
+<!-- PREMIUM MY ACCOUNT PAGE -->
 <div id="customerAccountPage" class="hidden">
-  <h2>👤 My Account</h2>
 
-  <button onclick="showCustomerSection('orders')">
-    📦 My Orders
-  </button>
+  <div class="account-premium-header">
+    <div class="account-avatar">👤</div>
+    <h2>My Account</h2>
+    <p>Welcome to KITCHOL Mart</p>
+  </div>
 
-  <button onclick="showCustomerSection('addresses')">
-    📍 My Addresses
-  </button>
+  <div class="account-premium-menu">
 
-  <button onclick="showCustomerSection('details')">
-    👤 My Profile
-  </button>
+    <button class="account-premium-item"
+      onclick="showCustomerSection('orders')">
+      <span class="account-premium-icon">📦</span>
+      <span class="account-premium-text">
+        <strong>My Orders</strong>
+        <small>View and track your orders</small>
+      </span>
+      <span class="account-premium-arrow">›</span>
+    </button>
 
-  <button onclick="showCustomerSection('support')">
-    💬 Help & Support
-  </button>
+    <button class="account-premium-item"
+      onclick="showCustomerSection('addresses')">
+      <span class="account-premium-icon">📍</span>
+      <span class="account-premium-text">
+        <strong>My Addresses</strong>
+        <small>Manage delivery addresses</small>
+      </span>
+      <span class="account-premium-arrow">›</span>
+    </button>
 
-  <button id="customerLogout" type="button">
-  🚪 Logout
-  </button>
+    <button class="account-premium-item"
+      onclick="showCustomerSection('details')">
+      <span class="account-premium-icon">👤</span>
+      <span class="account-premium-text">
+        <strong>My Profile</strong>
+        <small>Personal information</small>
+      </span>
+      <span class="account-premium-arrow">›</span>
+    </button>
+
+    <button class="account-premium-item"
+      onclick="showCustomerSection('support')">
+      <span class="account-premium-icon">💬</span>
+      <span class="account-premium-text">
+        <strong>Help & Support</strong>
+        <small>Get help with your shopping</small>
+      </span>
+      <span class="account-premium-arrow">›</span>
+    </button>
+
+    <button id="customerLogout"
+      class="account-premium-logout"
+      type="button">
+      <span>🚪 Logout</span>
+      <span>›</span>
+    </button>
+
+  </div>
+
 </div>
 
   
