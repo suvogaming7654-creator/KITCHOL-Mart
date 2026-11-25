@@ -1891,6 +1891,101 @@ $("cartItems").textContent="Cart Error: "+e.message;
     list.textContent="Orders Error: "+e.message;
   }
   }
+
+  
+async function loadVendorOrders(){
+  const list=$("vendorOrdersList");
+  list.textContent="Loading Orders...";
+
+  try{
+    const vendorId=auth.currentUser.uid;
+
+    const orderQuery=query(
+      collection(db,"orders"),
+      where("vendorId","==",vendorId)
+    );
+
+    const snapshot=await getDocs(orderQuery);
+
+    list.innerHTML="";
+
+    if(snapshot.empty){
+      list.textContent="No orders found.";
+      return;
+    }
+
+    snapshot.forEach(item=>{
+      const o=item.data();
+
+      const card=document.createElement("div");
+      card.className="product-card";
+
+      const title=document.createElement("h3");
+      title.textContent="📦 Seller Order";
+
+      const orderId=document.createElement("p");
+      orderId.textContent="Order ID: "+item.id;
+
+      const status=document.createElement("h3");
+      status.textContent="Status: "+(o.status||"Pending");
+
+      const total=document.createElement("h3");
+      total.textContent="Total: ₹"+o.total;
+
+      const products=document.createElement("div");
+
+      (o.products||[]).forEach(p=>{
+        const row=document.createElement("p");
+        row.textContent=
+          (p.name||"Product")+
+          " | Qty: "+p.quantity+
+          " | ₹"+p.price;
+        products.appendChild(row);
+      });
+
+      card.append(
+        title,
+        orderId,
+        products,
+        total,
+        status
+      );
+
+      if(o.status==="Pending"){
+        const acceptBtn=document.createElement("button");
+        acceptBtn.textContent="✅ Accept Order";
+
+        acceptBtn.onclick=async()=>{
+          try{
+            acceptBtn.disabled=true;
+
+            await updateDoc(
+              doc(db,"orders",item.id),
+              {status:"Confirmed"}
+            );
+
+            alert("Order Accepted!");
+
+            await loadVendorOrders();
+
+          }catch(e){
+            alert("Accept Error: "+e.message);
+            acceptBtn.disabled=false;
+          }
+        };
+
+        card.appendChild(acceptBtn);
+      }
+
+      list.appendChild(card);
+    });
+
+  }catch(e){
+    list.textContent="Orders Error: "+e.message;
+    console.error(e);
+  }
+}
+  
   
 async function loadCheckoutAddress(uid){
   const list=$("checkoutAddressList");
