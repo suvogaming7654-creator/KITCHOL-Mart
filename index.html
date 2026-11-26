@@ -3072,7 +3072,64 @@ window.alert = function(message){
 
   totalElement.textContent = "Total: ₹" + total;
 };
+window.loadCheckoutSummary = async function(uid){
 
+  const summary = document.getElementById("checkoutSummary");
+  const totalElement = document.getElementById("checkoutTotal");
+
+  if(!summary || !totalElement) return;
+
+  summary.innerHTML = "Loading...";
+  totalElement.textContent = "Total: ₹0";
+
+  try{
+
+    const snapshot = await getDocs(
+      collection(db,"users",uid,"cart")
+    );
+
+    summary.innerHTML = "";
+
+    let total = 0;
+
+    if(snapshot.empty){
+      summary.textContent = "Your cart is empty.";
+      totalElement.textContent = "Total: ₹0";
+      return;
+    }
+
+    snapshot.forEach(item=>{
+
+      const p = item.data();
+      const quantity = Number(p.quantity) || 1;
+      const price = Number(p.price) || 0;
+
+      total += price * quantity;
+
+      const row = document.createElement("div");
+
+      const name = document.createElement("p");
+      name.textContent = p.name;
+
+      const priceText = document.createElement("p");
+      priceText.textContent =
+        "₹" + price + " × " + quantity +
+        " = ₹" + (price * quantity);
+
+      row.append(name,priceText);
+      summary.appendChild(row);
+
+    });
+
+    totalElement.textContent = "Total: ₹" + total;
+
+  }catch(e){
+
+    summary.textContent = "Error: " + e.message;
+
+  }
+};
+  
 </script>
 </body>
 </html>
