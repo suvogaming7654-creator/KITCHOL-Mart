@@ -3011,19 +3011,25 @@ await loadMyOrders(auth.currentUser.uid);
 window.scrollTo(0,0);
 return;
 }
-
 // CHECKOUT
 if(section === "checkout"){
-homeElements.forEach(el => el.classList.add("hidden"));
 
-if(checkout) checkout.classList.remove("hidden");
-if(cartButton) cartButton.textContent = "🛒 My Cart";
+  homeElements.forEach(el => el.classList.add("hidden"));
 
-window.scrollTo(0,0);
-return;
+  if(checkout) checkout.classList.remove("hidden");
+
+  if(cartButton) cartButton.textContent = "🛒 My Cart";
+
+  if(auth.currentUser){
+    await window.loadCheckoutSummary(auth.currentUser.uid);
+  }
+
+  window.scrollTo(0,0);
+  return;
 }
 
 };
+
 let promoSlideIndex = 0;
 
 function showPromoSlide(index) {
