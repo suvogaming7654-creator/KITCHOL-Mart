@@ -2826,8 +2826,9 @@ window.loadVendorOrders = loadVendorOrders;
       card.className="product-card";
 
       card.style.cssText=
-        "display:flex;align-items:flex-start;"+
-        "gap:12px;padding:15px;margin-bottom:12px;";
+  "display:flex;align-items:flex-start;"+
+  "width:100%;box-sizing:border-box;"+
+  "gap:12px;padding:15px;margin-bottom:12px;";
 
       const radio=document.createElement("input");
       radio.type="radio";
@@ -2843,8 +2844,9 @@ window.loadVendorOrders = loadVendorOrders;
       const details=document.createElement("div");
 
       details.style.cssText=
-        "line-height:1.8;white-space:normal;"+
-        "overflow-wrap:anywhere;";
+  "flex:1;min-width:0;width:100%;"+
+  "line-height:1.8;white-space:normal;"+
+  "overflow-wrap:break-word;word-break:normal;";
 
       details.innerHTML=
         "<b>"+safe(a.name||"")+"</b><br>"+
