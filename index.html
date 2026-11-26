@@ -2793,8 +2793,8 @@ card.appendChild(invoiceBtn);
 }
 
 window.loadVendorOrders = loadVendorOrders;
-  
-async function loadCheckoutAddress(uid){
+
+  async function loadCheckoutAddress(uid){
   const list=$("checkoutAddressList");
   list.textContent="Loading Address...";
 
@@ -2816,18 +2816,38 @@ async function loadCheckoutAddress(uid){
       const card=document.createElement("div");
       card.className="product-card";
 
+      card.style.cssText=
+        "display:flex;align-items:flex-start;"+
+        "gap:12px;padding:15px;margin-bottom:12px;";
+
       const radio=document.createElement("input");
       radio.type="radio";
       radio.name="selectedAddress";
       radio.value=item.id;
+      radio.style.marginTop="5px";
+      radio.style.flexShrink="0";
+
+      if(a.isDefault){
+        radio.checked=true;
+      }
 
       const details=document.createElement("div");
-      details.textContent=
-        (a.name||"")+"\n"+
-        (a.phone||"")+"\n"+
-        (a.address||"")+"\n"+
-        (a.city||"")+"\n"+
-        (a.pincode||"");
+
+      details.style.cssText=
+        "line-height:1.8;white-space:normal;"+
+        "overflow-wrap:anywhere;";
+
+      details.innerHTML=
+        "<b>"+safe(a.name||"")+"</b><br>"+
+        safe(a.phone||"")+"<br>"+
+        safe(a.house||"")+"<br>"+
+        safe(a.street||"")+"<br>"+
+        safe(a.city||"")+"<br>"+
+        safe(a.post||"")+"<br>"+
+        safe(a.pin||"")+"<br>"+
+        safe(a.district||"")+"<br>"+
+        safe(a.state||"")+"<br>"+
+        "<b>Address Type:</b> "+safe(a.type||"");
 
       card.append(radio,details);
       list.appendChild(card);
@@ -2836,7 +2856,8 @@ async function loadCheckoutAddress(uid){
   }catch(e){
     list.textContent="Address Error: "+e.message;
   }
-}  
+  }
+
 $("checkoutButton").onclick=async()=>{
   if(!auth.currentUser){
     alert("Please login first.");
