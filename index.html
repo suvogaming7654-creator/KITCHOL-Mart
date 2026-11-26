@@ -2624,6 +2624,7 @@ invoiceBtn.style.cssText=
   "background:#0d9488;color:white;";
 
 invoiceBtn.onclick=()=>{
+  alert("Invoice Button Clicked");
   const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({
     "&":"&amp;",
     "<":"&lt;",
