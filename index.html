@@ -2241,27 +2241,50 @@ async function loadVendorOrders(){
       );
 
       if(o.status==="Pending"){
-        const acceptBtn=document.createElement("button");
-        acceptBtn.textContent="✅ Accept Order";
 
-        acceptBtn.onclick=async()=>{
-          try{
-            acceptBtn.disabled=true;
+  // ACCEPT
+  const acceptBtn=document.createElement("button");
+  acceptBtn.textContent="✅ Accept Order";
 
-            await updateDoc(
-              doc(db,"orders",item.id),
-              {status:"Confirmed"}
-            );
+  acceptBtn.onclick=async()=>{
+    try{
+      acceptBtn.disabled=true;
 
-            await loadVendorOrders();
+      await updateDoc(doc(db,"orders",item.id),{
+        status:"Accepted"
+      });
 
-          }catch(e){
-            alert("Accept Error: "+e.message);
-            acceptBtn.disabled=false;
-          }
-        };
+      await loadVendorOrders();
 
-        card.appendChild(acceptBtn);
+    }catch(e){
+      alert("Accept Error: "+e.message);
+      acceptBtn.disabled=false;
+    }
+  };
+
+  // CANCEL
+  const cancelBtn=document.createElement("button");
+  cancelBtn.textContent="❌ Cancel Order";
+
+  cancelBtn.onclick=async()=>{
+    if(!confirm("Cancel this order?"))return;
+
+    try{
+      cancelBtn.disabled=true;
+
+      await updateDoc(doc(db,"orders",item.id),{
+        status:"Cancelled"
+      });
+
+      await loadVendorOrders();
+
+    }catch(e){
+      alert("Cancel Error: "+e.message);
+      cancelBtn.disabled=false;
+    }
+  };
+
+  card.append(acceptBtn,cancelBtn);
       }
 
       list.appendChild(card);
