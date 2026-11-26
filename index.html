@@ -2794,6 +2794,15 @@ card.appendChild(invoiceBtn);
 
 window.loadVendorOrders = loadVendorOrders;
 
+  function safe(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+  
   async function loadCheckoutAddress(uid){
   const list=$("checkoutAddressList");
   list.textContent="Loading Address...";
