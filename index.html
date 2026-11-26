@@ -2184,6 +2184,9 @@ invoiceBtn.style.cssText=
 
 invoiceBtn.onclick=()=>{
   const a=o.address||{};
+  const fullAddress=a.fullAddress||a.addressLine||a.address||a.street||a.houseAddress||a.deliveryAddress||"";
+const fullCity=a.city||a.town||a.district||"";
+const fullPin=a.pincode||a.pin||a.postalCode||"";
   const products=o.products||[];
 
   const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({
