@@ -2184,6 +2184,7 @@ invoiceBtn.style.cssText=
 
 invoiceBtn.onclick=()=>{
   const a=o.address||{};
+  const products=o.products||[];
 const fullAddress=[a.house,a.street,a.city,a.post,a.pin,a.district,a.state].filter(Boolean).join(", ");
 const fullCity=a.city||"";
 const fullPin=a.pin||"";
