@@ -3135,6 +3135,17 @@ window.loadCheckoutSummary = async function(uid){
 
   }
 };
+document.addEventListener("click", async function(e){
+
+  if(e.target && e.target.id === "checkoutButton"){
+
+    if(auth.currentUser){
+      await window.loadCheckoutSummary(auth.currentUser.uid);
+    }
+
+  }
+
+});
   
 </script>
 </body>
