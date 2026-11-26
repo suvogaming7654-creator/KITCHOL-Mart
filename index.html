@@ -3057,6 +3057,21 @@ setInterval(() => {
 window.alert = function(message){
   console.log(message);
 };
+  window.updateCheckoutTotal = async function(){
+
+  const summary = document.getElementById("checkoutSummary");
+  const totalElement = document.getElementById("checkoutTotal");
+
+  if(!summary || !totalElement) return;
+
+  let total = 0;
+
+  summary.querySelectorAll("[data-price]").forEach(item=>{
+    total += Number(item.dataset.price || 0);
+  });
+
+  totalElement.textContent = "Total: ₹" + total;
+};
 
 </script>
 </body>
