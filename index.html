@@ -2206,15 +2206,12 @@ const fullPin=a.pin||"";
     </tr>
   `).join("");
 
-  const invoiceFrame=document.createElement("iframe");
+  const invoice=window.open("","_blank");
 
-invoiceFrame.style.cssText=
-  "position:fixed;left:0;bottom:0;width:100%;"+
-  "height:100%;border:0;opacity:0;z-index:99999;";
-
-document.body.appendChild(invoiceFrame);
-
-const invoice=invoiceFrame.contentWindow;
+if(!invoice){
+  alert("Allow popup to open invoice.");
+  return;
+}
 
   invoice.document.write(`
     <html>
