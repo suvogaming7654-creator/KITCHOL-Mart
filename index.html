@@ -2183,119 +2183,274 @@ window.saveMyProfile=async function(){
 
   
 async function loadVendorOrders(){
-  const list=$("vendorOrdersList");
-  list.textContent="Loading Orders...";
+
+  const list = $("vendorOrdersList");
+  list.textContent = "Loading Orders...";
 
   try{
-    const vendorId=auth.currentUser.uid;
 
-    const orderQuery=query(
+    const vendorId = auth.currentUser.uid;
+
+    const orderQuery = query(
       collection(db,"orders"),
       where("vendorId","==",vendorId)
     );
 
-    const snapshot=await getDocs(orderQuery);
+    const snapshot = await getDocs(orderQuery);
 
-    list.innerHTML="";
+    list.innerHTML = "";
 
     if(snapshot.empty){
-      list.textContent="No orders found.";
+      list.textContent = "No orders found.";
       return;
     }
 
+    // PREMIUM CARD STYLE
+    if(!document.getElementById("premiumVendorOrderStyle")){
+
+      const style = document.createElement("style");
+      style.id = "premiumVendorOrderStyle";
+
+      style.textContent = `
+        .vendor-premium-card{
+          background:linear-gradient(180deg,#ffffff,#f8fafc);
+          border:1px solid #e5e7eb;
+          border-radius:22px;
+          padding:18px;
+          margin:16px 0;
+          box-shadow:0 8px 24px rgba(0,0,0,.08);
+          overflow:hidden;
+        }
+
+        .vendor-order-top{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          flex-wrap:wrap;
+          gap:10px;
+          margin-bottom:15px;
+        }
+
+        .vendor-order-title{
+          font-size:20px;
+          font-weight:800;
+          color:#14532d;
+          margin:0;
+        }
+
+        .vendor-order-status{
+          padding:7px 13px;
+          border-radius:30px;
+          font-size:13px;
+          font-weight:800;
+        }
+
+        .vendor-order-id{
+          background:#f1f5f9;
+          padding:11px;
+          border-radius:12px;
+          font-size:13px;
+          word-break:break-all;
+          color:#475569;
+          margin:10px 0;
+        }
+
+        .vendor-product-box{
+          background:#f8fafc;
+          border:1px solid #e2e8f0;
+          border-radius:14px;
+          padding:12px;
+          margin:12px 0;
+        }
+
+        .vendor-product-row{
+          padding:10px 0;
+          border-bottom:1px solid #e5e7eb;
+          font-size:15px;
+        }
+
+        .vendor-product-row:last-child{
+          border-bottom:none;
+        }
+
+        .vendor-order-total{
+          background:#ecfdf5;
+          color:#166534;
+          padding:15px;
+          border-radius:14px;
+          font-size:23px;
+          font-weight:900;
+          margin:14px 0;
+        }
+
+        .vendor-order-btn{
+          width:100%;
+          padding:15px;
+          border:none;
+          border-radius:14px;
+          font-size:16px;
+          font-weight:800;
+          margin-top:10px;
+          cursor:pointer;
+        }
+
+        .vendor-accept-btn{
+          background:linear-gradient(135deg,#16a34a,#15803d);
+          color:white;
+        }
+
+        .vendor-cancel-btn{
+          background:linear-gradient(135deg,#ef4444,#dc2626);
+          color:white;
+        }
+
+        .vendor-order-btn:disabled{
+          opacity:.6;
+        }
+      `;
+
+      document.head.appendChild(style);
+    }
+
     snapshot.forEach(item=>{
-      const o=item.data();
 
-      const card=document.createElement("div");
-      card.className="product-card";
+      const o = item.data();
 
-      const title=document.createElement("h3");
-      title.textContent="📦 Seller Order";
+      const card = document.createElement("div");
+      card.className = "vendor-premium-card";
 
-      const orderId=document.createElement("p");
-      orderId.textContent="Order ID: "+item.id;
+      // HEADER
+      const top = document.createElement("div");
+      top.className = "vendor-order-top";
 
-      const status=document.createElement("h3");
-      status.textContent="Status: "+(o.status||"Pending");
+      const title = document.createElement("h3");
+      title.className = "vendor-order-title";
+      title.textContent = "📦 Seller Order";
 
-      const total=document.createElement("h3");
-      total.textContent="Total: ₹"+o.total;
+      const status = document.createElement("span");
+      status.className = "vendor-order-status";
 
-      const products=document.createElement("div");
+      const orderStatus = o.status || "Pending";
+      status.textContent = orderStatus;
 
-      (o.products||[]).forEach(p=>{
-        const row=document.createElement("p");
-        row.textContent=
-          (p.name||"Product")+
-          " | Qty: "+p.quantity+
-          " | ₹"+p.price;
-        products.appendChild(row);
+      if(orderStatus === "Pending"){
+        status.style.background = "#fef3c7";
+        status.style.color = "#92400e";
+      }else if(orderStatus === "Accepted" || orderStatus === "Confirmed"){
+        status.style.background = "#dcfce7";
+        status.style.color = "#166534";
+      }else if(orderStatus === "Cancelled"){
+        status.style.background = "#fee2e2";
+        status.style.color = "#991b1b";
+      }else{
+        status.style.background = "#e0f2fe";
+        status.style.color = "#075985";
+      }
+
+      top.append(title,status);
+
+      // ORDER ID
+      const orderId = document.createElement("div");
+      orderId.className = "vendor-order-id";
+      orderId.textContent = "Order ID: " + item.id;
+
+      // PRODUCTS
+      const productBox = document.createElement("div");
+      productBox.className = "vendor-product-box";
+
+      (o.products || []).forEach(p=>{
+
+        const row = document.createElement("div");
+        row.className = "vendor-product-row";
+
+        row.textContent =
+          "🛒 " + (p.name || "Product") +
+          "  |  Qty: " + (p.quantity || 1) +
+          "  |  ₹" + (p.price || 0);
+
+        productBox.appendChild(row);
       });
 
-      card.append(
-        title,
-        orderId,
-        products,
-        total,
-        status
-      );
+      // TOTAL
+      const total = document.createElement("div");
+      total.className = "vendor-order-total";
+      total.textContent = "Total Amount: ₹" + (o.total || 0);
 
-      if(o.status==="Pending"){
+      card.append(top,orderId,productBox,total);
 
-  // ACCEPT
-  const acceptBtn=document.createElement("button");
-  acceptBtn.textContent="✅ Accept Order";
+      // PENDING ACTIONS
+      if(o.status === "Pending"){
 
-  acceptBtn.onclick=async()=>{
-    try{
-      acceptBtn.disabled=true;
+        // ACCEPT
+        const acceptBtn = document.createElement("button");
+        acceptBtn.className =
+          "vendor-order-btn vendor-accept-btn";
+        acceptBtn.textContent = "✅ Accept Order";
 
-      await updateDoc(doc(db,"orders",item.id),{
-        status:"Accepted"
-      });
+        acceptBtn.onclick = async()=>{
 
-      await loadVendorOrders();
+          try{
 
-    }catch(e){
-      alert("Accept Error: "+e.message);
-      acceptBtn.disabled=false;
-    }
-  };
+            acceptBtn.disabled = true;
 
-  // CANCEL
-  const cancelBtn=document.createElement("button");
-  cancelBtn.textContent="❌ Cancel Order";
+            await updateDoc(
+              doc(db,"orders",item.id),
+              {status:"Accepted"}
+            );
 
-  cancelBtn.onclick=async()=>{
-    
+            await loadVendorOrders();
 
-    try{
-      cancelBtn.disabled=true;
+          }catch(e){
 
-      await updateDoc(doc(db,"orders",item.id),{
-        status:"Cancelled"
-      });
+            alert("Accept Error: " + e.message);
+            acceptBtn.disabled = false;
 
-      await loadVendorOrders();
+          }
+        };
 
-    }catch(e){
-      alert("Cancel Error: "+e.message);
-      cancelBtn.disabled=false;
-    }
-  };
+        // CANCEL
+        const cancelBtn = document.createElement("button");
+        cancelBtn.className =
+          "vendor-order-btn vendor-cancel-btn";
+        cancelBtn.textContent = "❌ Cancel Order";
 
-  card.append(acceptBtn,cancelBtn);
+        cancelBtn.onclick = async()=>{
+
+          try{
+
+            cancelBtn.disabled = true;
+
+            await updateDoc(
+              doc(db,"orders",item.id),
+              {status:"Cancelled"}
+            );
+
+            await loadVendorOrders();
+
+          }catch(e){
+
+            alert("Cancel Error: " + e.message);
+            cancelBtn.disabled = false;
+
+          }
+        };
+
+        card.append(acceptBtn,cancelBtn);
       }
 
       list.appendChild(card);
+
     });
 
   }catch(e){
-    list.textContent="Orders Error: "+e.message;
+
+    list.textContent = "Orders Error: " + e.message;
     console.error(e);
+
   }
 }
-  window.loadVendorOrders=loadVendorOrders;
+
+window.loadVendorOrders = loadVendorOrders;
   
 async function loadCheckoutAddress(uid){
   const list=$("checkoutAddressList");
