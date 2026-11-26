@@ -1971,7 +1971,8 @@ $("cartItems").textContent="Cart Error: "+e.message;
 }
 }
 
-  async function loadMyOrders(uid){
+  
+async function loadMyOrders(uid){
   const list=$("myOrdersList");
   list.textContent="Loading Orders...";
 
@@ -1982,7 +1983,6 @@ $("cartItems").textContent="Cart Error: "+e.message;
     );
 
     const snapshot=await getDocs(orderQuery);
-
     list.innerHTML="";
 
     if(snapshot.empty){
@@ -1994,7 +1994,7 @@ $("cartItems").textContent="Cart Error: "+e.message;
 
     const steps=[
       "Pending",
-      "Confirmed",
+      "Accepted",
       "Processing",
       "Shipped",
       "Out for Delivery",
@@ -2003,46 +2003,77 @@ $("cartItems").textContent="Cart Error: "+e.message;
 
     orders.forEach(item=>{
       const o=item.data();
+      const currentStatus=o.status||"Pending";
 
-      if(o.status==="Cancelled") return;
-      
       const card=document.createElement("div");
       card.className="product-card";
 
+      card.style.cssText=
+        "background:white;padding:18px;margin:15px 0;"+
+        "border-radius:18px;border:1px solid #e5e7eb;"+
+        "box-shadow:0 4px 15px rgba(0,0,0,.06);";
+
       const title=document.createElement("h3");
-      title.textContent="📦 Order Details";
+      title.textContent="📦 My Order";
+      title.style.color="#087d32";
 
       const orderId=document.createElement("p");
-      orderId.textContent="Order ID: "+item.id;
+      orderId.textContent="🧾 Order ID: "+item.id;
+      orderId.style.fontSize="12px";
 
-      const status=document.createElement("h3");
-      status.textContent="Status: "+(o.status||"Pending");
-
-      const total=document.createElement("h3");
-      total.textContent="Total: ₹"+o.total;
-
-      const payment=document.createElement("p");
-      payment.textContent="Payment: "+(o.paymentMethod||"COD");
+      const status=document.createElement("div");
+      status.textContent="● "+currentStatus;
+      status.style.cssText=
+        "display:inline-block;padding:8px 14px;"+
+        "border-radius:20px;font-weight:bold;"+
+        "background:"+
+        (currentStatus==="Delivered"?"#dcfce7":
+         currentStatus==="Cancelled"?"#fee2e2":
+         "#fff7ed")+
+        ";color:"+
+        (currentStatus==="Delivered"?"#166534":
+         currentStatus==="Cancelled"?"#dc2626":
+         "#c2410c")+";";
 
       const productTitle=document.createElement("h4");
-      productTitle.textContent="Products:";
+      productTitle.textContent="🛒 Products";
 
       const productList=document.createElement("div");
 
       (o.products||[]).forEach(p=>{
-        const row=document.createElement("p");
+        const row=document.createElement("div");
+
+        row.style.cssText=
+          "padding:10px;margin:6px 0;"+
+          "background:#f8fafc;border-radius:10px;";
+
         row.textContent=
           (p.name||"Product")+
           " | ₹"+p.price+
           " | Qty: "+p.quantity;
+
         productList.appendChild(row);
       });
+
+      const total=document.createElement("h3");
+      total.textContent="💰 Total Amount: ₹"+o.total;
+      total.style.cssText=
+        "color:#087d32;background:#f0fdf4;"+
+        "padding:12px;border-radius:10px;";
+
+      const payment=document.createElement("p");
+      payment.textContent=
+        "💳 Payment: "+(o.paymentMethod||"COD");
 
       const addressTitle=document.createElement("h4");
       addressTitle.textContent="📍 Delivery Address";
 
-      const address=document.createElement("p");
+      const address=document.createElement("div");
       const a=o.address||{};
+
+      address.style.cssText=
+        "background:#f8fafc;padding:12px;"+
+        "border-radius:10px;line-height:1.7;";
 
       address.textContent=
         (a.name||"")+"\n"+
@@ -2054,68 +2085,102 @@ $("cartItems").textContent="Cart Error: "+e.message;
       const trackingTitle=document.createElement("h3");
       trackingTitle.textContent="🚚 Order Tracking";
 
+      trackingTitle.style.color="#087d32";
+
       const tracking=document.createElement("div");
+      tracking.style.cssText=
+        "padding:12px;background:#f8fafc;"+
+        "border-radius:12px;";
 
-      const currentStatus=o.status||"Pending";
-      const currentIndex=steps.indexOf(currentStatus);
+      const trackingSteps=[
+        "Pending",
+        "Accepted",
+        "Processing",
+        "Shipped",
+        "Out for Delivery",
+        "Delivered"
+      ];
 
-      steps.forEach((step,index)=>{
-        const line=document.createElement("p");
+      const currentIndex=
+        trackingSteps.indexOf(currentStatus);
 
-        if(index<=currentIndex){
-          line.textContent="✅ "+step;
-        }else{
-          line.textContent="○ "+step;
-        }
+      trackingSteps.forEach((step,index)=>{
+        const line=document.createElement("div");
+
+        line.style.cssText=
+          "padding:10px 5px;font-weight:"+
+          (index<=currentIndex?"bold":"normal")+
+          ";color:"+
+          (index<=currentIndex?"#15803d":"#9ca3af")+
+          ";";
+
+        line.textContent=
+          (index<=currentIndex?"✅ ":"○ ")+step;
 
         tracking.appendChild(line);
       });
 
       if(currentStatus==="Cancelled"){
-        const cancelled=document.createElement("p");
+        const cancelled=document.createElement("div");
+
         cancelled.textContent="❌ Order Cancelled";
+        cancelled.style.cssText=
+          "padding:10px;color:#dc2626;font-weight:bold;";
+
         tracking.appendChild(cancelled);
       }
 
       card.append(
         title,
         orderId,
+        status,
         productTitle,
         productList,
         total,
         payment,
         addressTitle,
         address,
-        status,
         trackingTitle,
         tracking
       );
-if(o.status==="Pending"){
-  const cancelBtn=document.createElement("button");
-  cancelBtn.textContent="❌ Cancel Order";
 
-  cancelBtn.onclick=async()=>{
-    try{
-      await updateDoc(
-        doc(db,"orders",item.id),
-        {status:"Cancelled"}
-      );
+      if(currentStatus==="Pending"){
+        const cancelBtn=document.createElement("button");
 
-      await loadMyOrders(uid);
-    }catch(e){
-      console.error("Cancel Error:",e);
-    }
-  };
+        cancelBtn.textContent="❌ Cancel Order";
+        cancelBtn.style.cssText=
+          "width:100%;padding:13px;margin-top:15px;"+
+          "background:#dc2626;color:white;border:none;"+
+          "border-radius:12px;font-weight:bold;";
 
-  card.appendChild(cancelBtn);
-}
+        cancelBtn.onclick=async()=>{
+          if(!confirm("Are you sure you want to cancel this order?"))return;
+
+          try{
+            await updateDoc(
+              doc(db,"orders",item.id),
+              {status:"Cancelled"}
+            );
+
+            await loadMyOrders(uid);
+
+          }catch(e){
+            console.error("Cancel Error:",e);
+            alert("Order cancel failed.");
+          }
+        };
+
+        card.appendChild(cancelBtn);
+      }
+
       list.appendChild(card);
     });
 
   }catch(e){
     list.textContent="Orders Error: "+e.message;
   }
-  }
+}
+        
 
   // LOAD MY PROFILE DETAILS
 async function loadMyProfile(){
