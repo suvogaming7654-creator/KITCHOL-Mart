@@ -2503,6 +2503,176 @@ async function loadVendorOrders(){
         card.append(acceptBtn,cancelBtn);
       }
 
+      
+const invoiceBtn=document.createElement("button");
+
+invoiceBtn.className="vendor-order-btn";
+invoiceBtn.textContent="📄 Download Invoice";
+
+invoiceBtn.style.cssText=
+  "background:#0d9488;color:white;";
+
+invoiceBtn.onclick=()=>{
+  const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+
+  const a=o.address||{};
+  const products=o.products||[];
+
+  const seller=
+    o.sellerName||
+    o.vendorName||
+    auth.currentUser?.displayName||
+    auth.currentUser?.email||
+    "KITCHOL MART Seller";
+
+  let date="";
+
+  if(o.createdAt?.toDate){
+    date=o.createdAt.toDate().toLocaleString("en-IN");
+  }else{
+    date=new Date().toLocaleString("en-IN");
+  }
+
+  const productRows=products.map(p=>`
+    <tr>
+      <td>${safe(p.name||"Product")}</td>
+      <td>${safe(p.quantity||0)}</td>
+      <td>₹${safe(p.price||0)}</td>
+      <td>₹${safe(Number(p.price||0)*Number(p.quantity||0))}</td>
+    </tr>
+  `).join("");
+
+  const invoice=window.open("","_blank");
+
+  if(!invoice){
+    alert("Please allow popup to download invoice.");
+    return;
+  }
+
+  invoice.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>KITCHOL MART Invoice</title>
+
+      <style>
+        body{
+          font-family:Arial,sans-serif;
+          padding:20px;
+          color:#222;
+        }
+        .header{
+          text-align:center;
+          color:#087d32;
+        }
+        .box{
+          border:1px solid #ddd;
+          padding:15px;
+          margin:15px 0;
+          border-radius:10px;
+        }
+        table{
+          width:100%;
+          border-collapse:collapse;
+        }
+        th,td{
+          border:1px solid #ddd;
+          padding:10px;
+          text-align:left;
+        }
+        th{
+          background:#e8f5e9;
+        }
+        .total{
+          text-align:right;
+          font-size:20px;
+          color:#087d32;
+          font-weight:bold;
+        }
+        @media print{
+          button{display:none;}
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <div class="header">
+        <h1>KITCHOL MART</h1>
+        <h3>ORDER INVOICE</h3>
+      </div>
+
+      <div class="box">
+        <b>Order ID:</b> ${safe(item.id)}<br>
+        <b>Order Date:</b> ${safe(date)}<br>
+        <b>Status:</b> ${safe(o.status||"Pending")}<br>
+        <b>Payment:</b> ${safe(o.paymentMethod||"COD")}
+      </div>
+
+      <div class="box">
+        <h3>Customer Details</h3>
+        <b>Name:</b> ${safe(a.name)}<br>
+        <b>Phone:</b> ${safe(a.phone)}<br>
+        <b>Address:</b> ${safe(a.address)}<br>
+        <b>City:</b> ${safe(a.city)}<br>
+        <b>PIN:</b> ${safe(a.pincode)}
+      </div>
+
+      <div class="box">
+        <h3>Seller Details</h3>
+        <b>Seller Name:</b> ${safe(seller)}
+      </div>
+
+      <h3>Products</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          ${productRows}
+        </tbody>
+      </table>
+
+      <h2 class="total">
+        Total Amount: ₹${safe(o.total)}
+      </h2>
+
+      <hr>
+
+      <p style="text-align:center">
+        Thank you for shopping with KITCHOL MART!
+      </p>
+
+      <button onclick="window.print()"
+        style="padding:12px 20px;background:#087d32;
+        color:white;border:none;border-radius:8px;">
+        Print / Save PDF
+      </button>
+
+    </body>
+    </html>
+  `);
+
+  invoice.document.close();
+};
+
+card.appendChild(invoiceBtn);
+      
+      
       list.appendChild(card);
 
     });
