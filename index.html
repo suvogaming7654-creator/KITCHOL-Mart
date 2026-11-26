@@ -2728,13 +2728,18 @@ invoiceBtn.onclick=()=>{
       </div>
 
       <div class="box">
-        <h3>Customer Details</h3>
-        <b>Name:</b> ${safe(a.name)}<br>
-        <b>Phone:</b> ${safe(a.phone)}<br>
-        <b>Address:</b> ${safe(a.address)}<br>
-        <b>City:</b> ${safe(a.city)}<br>
-        <b>PIN:</b> ${safe(a.pincode)}
-      </div>
+  <h3>Customer Details</h3>
+  <b>Name:</b> ${safe(a.name||"")}<br>
+  <b>Phone:</b> ${safe(a.phone||"")}<br>
+  <b>House:</b> ${safe(a.house||"")}<br>
+  <b>Street:</b> ${safe(a.street||"")}<br>
+  <b>City:</b> ${safe(a.city||"")}<br>
+  <b>Post:</b> ${safe(a.post||"")}<br>
+  <b>PIN:</b> ${safe(a.pin||"")}<br>
+  <b>District:</b> ${safe(a.district||"")}<br>
+  <b>State:</b> ${safe(a.state||"")}<br>
+  <b>Address Type:</b> ${safe(a.type||"")}
+</div>
 
       <div class="box">
         <h3>Seller Details</h3>
