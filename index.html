@@ -2173,6 +2173,110 @@ async function loadMyOrders(uid){
         card.appendChild(cancelBtn);
       }
 
+
+const invoiceBtn=document.createElement("button");
+invoiceBtn.textContent="📄 Download Invoice";
+
+invoiceBtn.style.cssText=
+  "width:100%;padding:13px;margin-top:10px;"+
+  "background:#087d32;color:white;border:none;"+
+  "border-radius:12px;font-weight:bold;";
+
+invoiceBtn.onclick=()=>{
+  const a=o.address||{};
+  const products=o.products||[];
+
+  const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+
+  const productRows=products.map(p=>`
+    <tr>
+      <td>${safe(p.name)}</td>
+      <td>${safe(p.quantity)}</td>
+      <td>₹${safe(p.price)}</td>
+      <td>₹${safe(Number(p.price||0)*Number(p.quantity||0))}</td>
+    </tr>
+  `).join("");
+
+  const invoice=window.open("","_blank");
+
+  if(!invoice){
+    alert("Allow popup to open invoice.");
+    return;
+  }
+
+  invoice.document.write(`
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>KITCHOL Invoice</title>
+    <style>
+      body{font-family:Arial;padding:20px;color:#222}
+      h1{text-align:center;color:#087d32}
+      table{width:100%;border-collapse:collapse}
+      th,td{border:1px solid #ddd;padding:10px}
+      th{background:#e8f5e9}
+      .box{padding:15px;border:1px solid #ddd;margin:15px 0}
+      button{padding:12px;background:#087d32;color:white;border:0}
+    </style>
+    </head>
+    <body>
+
+    <h1>KITCHOL MART</h1>
+    <h2 style="text-align:center">ORDER INVOICE</h2>
+
+    <div class="box">
+      <b>Order ID:</b> ${safe(item.id)}<br>
+      <b>Status:</b> ${safe(o.status)}<br>
+      <b>Payment:</b> ${safe(o.paymentMethod||"COD")}
+    </div>
+
+    <div class="box">
+      <h3>Customer Details</h3>
+      <b>Name:</b> ${safe(a.name)}<br>
+      <b>Phone:</b> ${safe(a.phone)}<br>
+      <b>Address:</b> ${safe(a.address)}<br>
+      <b>City:</b> ${safe(a.city)}<br>
+      <b>PIN:</b> ${safe(a.pincode)}
+    </div>
+
+    <div class="box">
+      <h3>Seller</h3>
+      ${safe(o.sellerName||o.vendorName||"KITCHOL MART")}
+    </div>
+
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+      </tr>
+      ${productRows}
+    </table>
+
+    <h2>Total: ₹${safe(o.total)}</h2>
+
+    <p>Thank you for shopping with KITCHOL MART!</p>
+
+    <button onclick="window.print()">Print / Save PDF</button>
+
+    </body>
+    </html>
+  `);
+
+  invoice.document.close();
+};
+
+card.appendChild(invoiceBtn);
+      
+      
+      
       list.appendChild(card);
     });
 
