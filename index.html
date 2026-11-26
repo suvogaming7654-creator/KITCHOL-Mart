@@ -2184,10 +2184,9 @@ invoiceBtn.style.cssText=
 
 invoiceBtn.onclick=()=>{
   const a=o.address||{};
-  const fullAddress=a.fullAddress||a.addressLine||a.address||a.street||a.houseAddress||a.deliveryAddress||"";
-const fullCity=a.city||a.town||a.district||"";
-const fullPin=a.pincode||a.pin||a.postalCode||"";
-  const products=o.products||[];
+const fullAddress=[a.house,a.street,a.city,a.post,a.pin,a.district,a.state].filter(Boolean).join(", ");
+const fullCity=a.city||"";
+const fullPin=a.pin||"";
 
   const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({
     "&":"&amp;",
@@ -2240,13 +2239,18 @@ const fullPin=a.pincode||a.pin||a.postalCode||"";
     </div>
 
     <div class="box">
-      <h3>Customer Details</h3>
-      <b>Name:</b> ${safe(a.name)}<br>
-      <b>Phone:</b> ${safe(a.phone)}<br>
-      <b>Full Address:</b> ${safe(fullAddress)}<br>
-<b>City:</b> ${safe(fullCity)}<br>
-<b>PIN:</b> ${safe(fullPin)}
-    </div>
+  <h3>Customer Details</h3>
+  <b>Name:</b> ${safe(a.name||"")}<br>
+  <b>Phone:</b> ${safe(a.phone||"")}<br>
+  <b>House:</b> ${safe(a.house||"")}<br>
+  <b>Street:</b> ${safe(a.street||"")}<br>
+  <b>City:</b> ${safe(a.city||"")}<br>
+  <b>Post:</b> ${safe(a.post||"")}<br>
+  <b>PIN:</b> ${safe(a.pin||"")}<br>
+  <b>District:</b> ${safe(a.district||"")}<br>
+  <b>State:</b> ${safe(a.state||"")}<br>
+  <b>Address Type:</b> ${safe(a.type||"")}
+</div>
 
     <div class="box">
       <h3>Seller</h3>
