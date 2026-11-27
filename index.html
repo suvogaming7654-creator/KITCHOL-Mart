@@ -1867,23 +1867,29 @@ async function loadAdminOrderNotifications(){
 
       if(o.status==="Pending"){
         count++;
+const card=document.createElement("div");
+card.style.cssText=
+  "background:#fff7ed;padding:12px;margin:10px 0;"+
+  "border:1px solid #fed7aa;border-radius:12px;";
 
-        const card=document.createElement("div");
-        card.style.cssText=
-          "background:#fff7ed;padding:12px;margin:10px 0;"+
-          "border:1px solid #fed7aa;border-radius:12px;";
+const title=document.createElement("b");
+title.textContent="🔔 New Pending Order";
 
-        const title=document.createElement("b");
-        title.textContent="🔔 New Pending Order";
+const customer=document.createElement("p");
+customer.textContent="Customer: "+(o.address?.name||"N/A");
 
-        const id=document.createElement("p");
-        id.textContent="Order ID: "+item.id;
+const phone=document.createElement("p");
+phone.textContent="Phone: "+(o.address?.phone||"N/A");
 
-        const total=document.createElement("p");
-        total.textContent="Total: ₹"+(o.total||0);
+const id=document.createElement("p");
+id.textContent="Order ID: "+item.id;
 
-        card.append(title,id,total);
-        list.appendChild(card);
+const total=document.createElement("p");
+total.textContent="Total: ₹"+(o.total||0);
+
+card.append(title,customer,phone,id,total);
+list.appendChild(card);
+        
       }
     });
 
