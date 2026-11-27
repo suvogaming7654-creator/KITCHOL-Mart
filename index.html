@@ -3519,6 +3519,14 @@ showPage("adminPage");
 await loadAdminVendors();
 await loadAdminProducts();
 await loadAdminOrderNotifications();
+ 
+if(window.adminOrderRefreshTimer){
+  clearInterval(window.adminOrderRefreshTimer);
+}
+
+window.adminOrderRefreshTimer=setInterval(()=>{
+  loadAdminOrderNotifications();
+},30000);
 return;
 }
 
