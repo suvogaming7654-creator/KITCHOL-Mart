@@ -1887,7 +1887,19 @@ id.textContent="Order ID: "+item.id;
 const total=document.createElement("p");
 total.textContent="Total: ₹"+(o.total||0);
 
-card.append(title,customer,phone,id,total);
+const productInfo=document.createElement("p");
+
+let productNames="";
+
+if(Array.isArray(o.products)){
+  productNames=o.products.map(p=>p.name||p.title||"Product").join(", ");
+}else{
+  productNames="Product details unavailable";
+}
+
+productInfo.textContent="Products: "+productNames;        
+        
+card.append(title,customer,phone,productInfo,id,total);
 list.appendChild(card);
         
       }
