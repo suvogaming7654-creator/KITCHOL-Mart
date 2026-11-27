@@ -3820,36 +3820,7 @@ document.addEventListener("click", async function(e){
 });
 
 
-let adminOrderNotificationStarted = false;
 
-function startAdminOrderNotification(){
-
-  if(adminOrderNotificationStarted) return;
-  adminOrderNotificationStarted = true;
-
-  let firstLoad = true;
-
-  onSnapshot(collection(db,"orders"),snapshot=>{
-
-    if(firstLoad){
-      firstLoad=false;
-      return;
-    }
-
-    snapshot.docChanges().forEach(change=>{
-
-      if(change.type==="added"){
-        alert("🔔 KITCHOL MART: New Order Received!");
-      }
-
-    });
-
-  },error=>{
-    console.error("Order notification error:",error);
-    adminOrderNotificationStarted=false;
-  });
-
-}
   
   
 </script>
